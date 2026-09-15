@@ -1,0 +1,25 @@
+{
+  "name": "miligrams",
+  "version": "1.0.0",
+  "description": "Miligrams Full-Stack Agricultural Crop-Tracking Web Application with SHA-256 Blockchain Ledger",
+  "scripts": {
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"green,cyan\" \"npm run server\" \"npm run client\"",
+    "server": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev",
+    "build:client": "npm --prefix client run build",
+    "test:blockchain": "npm --prefix server run test:blockchain"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "keywords": [
+    "agriculture",
+    "crop-tracking",
+    "blockchain",
+    "sha256",
+    "merkle-tree",
+    "miligrams"
+  ],
+  "author": "",
+  "license": "ISC"
+}
