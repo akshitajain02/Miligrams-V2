@@ -24,10 +24,18 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ success: false, message: `Farmer with ID ${farmerId} already exists.` });
     }
 
+    let cleanContact = '';
+    if (contact) {
+      cleanContact = contact.toString().replace(/\D/g, '').slice(0, 10);
+      if (contact.toString().replace(/\D/g, '').length > 10) {
+        return res.status(400).json({ success: false, message: 'Contact number must not exceed 10 digits.' });
+      }
+    }
+
     const newFarmer = await Farmer.create({
       name,
       uniqueId: farmerId,
-      contact: contact || '',
+      contact: cleanContact,
       location: location || 'Punjab, India',
       agriStackId: agriStackId || `AGRI-IN-2026-${Math.floor(1000 + Math.random() * 9000)}`,
       aadhaarNumber: aadhaarNumber || '',
@@ -74,7 +82,12 @@ router.put('/:id/kyc-submit', async (req, res) => {
     if (photoUrl) farmer.photoUrl = photoUrl;
     if (khatauniNumber) farmer.khatauniNumber = khatauniNumber;
     if (name) farmer.name = name;
-    if (contact) farmer.contact = contact;
+    if (contact) {
+      if (contact.toString().replace(/\D/g, '').length > 10) {
+        return res.status(400).json({ success: false, message: 'Contact number must not exceed 10 digits.' });
+      }
+      farmer.contact = contact.toString().replace(/\D/g, '').slice(0, 10);
+    }
     if (location) farmer.location = location;
 
     farmer.kycStatus = 'pending';

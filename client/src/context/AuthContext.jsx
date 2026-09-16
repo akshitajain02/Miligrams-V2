@@ -1,4 +1,4 @@
-﻿import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext(null);
 
@@ -14,22 +14,11 @@ export function AuthProvider({ children }) {
     } catch (e) {
       console.error('Failed to parse saved auth:', e);
     }
-    // Default seed session for instant accessibility
+    // Default unauthenticated session for fresh visitor entry
     return {
-      isAuthenticated: true,
-      role: 'farmer',
-      user: {
-        uniqueId: 'FARMER-101',
-        name: 'Ramesh Patel',
-        role: 'farmer',
-        location: 'Ludhiana, Punjab',
-        contact: '+91 98765 43210',
-        kycStatus: 'verified',
-        agriStackId: 'AGRI-PB-2026-8891',
-        aadhaarNumber: 'XXXX-XXXX-4321',
-        khatauniNumber: 'KH-9021/26-PB',
-        rating: 4.9
-      }
+      isAuthenticated: false,
+      role: null,
+      user: null
     };
   });
 

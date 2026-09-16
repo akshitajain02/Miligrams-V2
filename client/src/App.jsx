@@ -44,11 +44,12 @@ export default function App() {
           {/* Main Viewport */}
           <div className="app-main-viewport">
             <Routes>
-              {/* Landing Page */}
-              <Route path="/" element={<LandingPage lang={lang} />} />
-              
-              {/* Role-Based Authentication & Gateway */}
+              {/* Default Entry Point: Role-Based Authentication & Gateway */}
+              <Route path="/" element={<LoginPage lang={lang} />} />
               <Route path="/login" element={<LoginPage lang={lang} />} />
+              
+              {/* System Overview & Interactive 3D Ecosystem */}
+              <Route path="/overview" element={<LandingPage lang={lang} />} />
 
               {/* 4 Dedicated Portals */}
               <Route path="/farmer" element={<FarmerPortal lang={lang} />} />

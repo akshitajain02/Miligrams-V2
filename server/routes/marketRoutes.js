@@ -194,10 +194,18 @@ router.post('/buyers/register', async (req, res) => {
     }
 
     const buyerId = uniqueId || `BUYER-${Math.floor(100 + Math.random() * 900)}`;
+    let cleanContact = '';
+    if (contact) {
+      cleanContact = contact.toString().replace(/\D/g, '').slice(0, 10);
+      if (contact.toString().replace(/\D/g, '').length > 10) {
+        return res.status(400).json({ success: false, message: 'Contact number must not exceed 10 digits.' });
+      }
+    }
+
     const buyer = await Buyer.create({
       name,
       uniqueId: buyerId,
-      contact: contact || '',
+      contact: cleanContact,
       organization: organization || 'Agri Merchant'
     });
 

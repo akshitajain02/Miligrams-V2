@@ -57,14 +57,18 @@ export default function RegisterView() {
   }, []);
 
   const handleFarmerSubmit = async (e) => {
-    e.preventDefault();
+    const cleanPhone = (farmerForm.contact || '').replace(/\D/g, '');
+    if (cleanPhone && cleanPhone.length > 10) {
+      setFeedback({ type: 'error', message: 'Contact number cannot exceed 10 digits.' });
+      return;
+    }
     setLoading(true);
     setFeedback(null);
     try {
       const res = await fetch('/api/farmers/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(farmerForm)
+        body: JSON.stringify({ ...farmerForm, contact: cleanPhone })
       });
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.message || 'Registration failed');
@@ -104,13 +108,18 @@ export default function RegisterView() {
 
   const handleBuyerSubmit = async (e) => {
     e.preventDefault();
+    const cleanPhone = (buyerForm.contact || '').replace(/\D/g, '');
+    if (cleanPhone && cleanPhone.length > 10) {
+      setFeedback({ type: 'error', message: 'Contact number cannot exceed 10 digits.' });
+      return;
+    }
     setLoading(true);
     setFeedback(null);
     try {
       const res = await fetch('/api/marketplace/buyers/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(buyerForm)
+        body: JSON.stringify({ ...buyerForm, contact: cleanPhone })
       });
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.message || 'Registration failed');
@@ -211,13 +220,17 @@ export default function RegisterView() {
 
             <div className="form-grid">
               <div className="form-group">
-                <label className="form-label">Contact Number</label>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <label className="form-label">Contact Number</label>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{farmerForm.contact.length}/10</span>
+                </div>
                 <input
-                  type="text"
+                  type="tel"
+                  maxLength={10}
                   className="form-input"
-                  placeholder="e.g. +91 98765 00000"
+                  placeholder="e.g. 9876543210 (Max 10 digits)"
                   value={farmerForm.contact}
-                  onChange={e => setFarmerForm({ ...farmerForm, contact: e.target.value })}
+                  onChange={e => setFarmerForm({ ...farmerForm, contact: e.target.value.replace(/\D/g, '').slice(0, 10) })}
                 />
               </div>
               <div className="form-group">
@@ -318,13 +331,17 @@ export default function RegisterView() {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label">Contact Number</label>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <label className="form-label">Contact Number</label>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{buyerForm.contact.length}/10</span>
+                </div>
                 <input
-                  type="text"
+                  type="tel"
+                  maxLength={10}
                   className="form-input"
-                  placeholder="e.g. +91 99000 12345"
+                  placeholder="e.g. 9900012345 (Max 10 digits)"
                   value={buyerForm.contact}
-                  onChange={e => setBuyerForm({ ...buyerForm, contact: e.target.value })}
+                  onChange={e => setBuyerForm({ ...buyerForm, contact: e.target.value.replace(/\D/g, '').slice(0, 10) })}
                 />
               </div>
             </div>

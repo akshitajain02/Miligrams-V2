@@ -56,7 +56,18 @@ export default function Sidebar({ lang = 'hi', setLang, theme = 'dark', toggleTh
     <>
       <aside className="app-sidebar">
         {/* Top Brand Emblem */}
-        <div className="sidebar-brand" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+        <div 
+          className="sidebar-brand" 
+          onClick={() => {
+            if (isAuthenticated && currentRole) {
+              navigate(`/${currentRole}`);
+            } else {
+              navigate('/login');
+            }
+          }} 
+          style={{ cursor: 'pointer' }}
+          title="Miligrams Home"
+        >
           <div className="sidebar-brand-icon">
             <Sprout size={24} />
           </div>
@@ -143,12 +154,11 @@ export default function Sidebar({ lang = 'hi', setLang, theme = 'dark', toggleTh
           </div>
 
           <NavLink
-            to="/"
-            end
+            to="/overview"
             className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active-farmer' : ''}`}
           >
             <span className="sidebar-nav-icon"><Layers size={17} /></span>
-            <span>{lang === 'hi' ? 'होम व नेविगेटर' : 'Home & Overview'}</span>
+            <span>{lang === 'hi' ? 'सिस्टम ओवरव्यू' : 'System Overview'}</span>
           </NavLink>
 
           <NavLink
@@ -186,7 +196,7 @@ export default function Sidebar({ lang = 'hi', setLang, theme = 'dark', toggleTh
           {/* Dedicated Login Link */}
           <NavLink
             to="/login"
-            className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active-farmer' : ''}`}
+            className={() => `sidebar-nav-item ${(location.pathname === '/' || location.pathname === '/login') ? 'active-farmer' : ''}`}
             style={{ marginTop: 'auto', borderTop: '1px solid var(--border)' }}
           >
             <span className="sidebar-nav-icon"><LogIn size={16} /></span>

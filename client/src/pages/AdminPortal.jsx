@@ -162,14 +162,22 @@ export default function AdminPortal({ lang = 'hi' }) {
       let endpoint = '';
       let body = {};
       if (regRole === 'farmer') {
+        const cleanPhone = (farmerForm.contact || '').replace(/\D/g, '');
+        if (cleanPhone && cleanPhone.length > 10) {
+          throw new Error(lang === 'hi' ? 'फोन नंबर 10 अंकों से अधिक नहीं हो सकता।' : 'Phone number cannot exceed 10 digits.');
+        }
         endpoint = '/api/farmers/register';
-        body = farmerForm;
+        body = { ...farmerForm, contact: cleanPhone };
       } else if (regRole === 'warehouse') {
         endpoint = '/api/warehouse/register';
         body = warehouseForm;
       } else {
+        const cleanPhone = (buyerForm.contact || '').replace(/\D/g, '');
+        if (cleanPhone && cleanPhone.length > 10) {
+          throw new Error(lang === 'hi' ? 'फोन नंबर 10 अंकों से अधिक नहीं हो सकता।' : 'Phone number cannot exceed 10 digits.');
+        }
         endpoint = '/api/marketplace/buyers/register';
-        body = buyerForm;
+        body = { ...buyerForm, contact: cleanPhone };
       }
 
       const res = await fetch(endpoint, {
@@ -761,12 +769,19 @@ export default function AdminPortal({ lang = 'hi' }) {
                   />
                 </div>
                 <div>
-                  <label className="form-label">संपर्क नंबर (Contact)</label>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                    <label className="form-label" style={{ margin: 0 }}>संपर्क नंबर (Contact)</label>
+                    <span style={{ fontSize: '0.72rem', color: farmerForm.contact.length === 10 ? '#34d399' : 'var(--text-muted)' }}>
+                      {farmerForm.contact.length}/10
+                    </span>
+                  </div>
                   <input
-                    type="text"
+                    type="tel"
+                    maxLength={10}
+                    placeholder="9876543210 (Max 10 digits)"
                     className="form-input"
                     value={farmerForm.contact}
-                    onChange={(e) => setFarmerForm({ ...farmerForm, contact: e.target.value })}
+                    onChange={(e) => setFarmerForm({ ...farmerForm, contact: e.target.value.replace(/\D/g, '').slice(0, 10) })}
                   />
                 </div>
                 <div>
@@ -851,12 +866,19 @@ export default function AdminPortal({ lang = 'hi' }) {
                   />
                 </div>
                 <div>
-                  <label className="form-label">संपर्क नंबर (Contact)</label>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                    <label className="form-label" style={{ margin: 0 }}>संपर्क नंबर (Contact)</label>
+                    <span style={{ fontSize: '0.72rem', color: buyerForm.contact.length === 10 ? '#34d399' : 'var(--text-muted)' }}>
+                      {buyerForm.contact.length}/10
+                    </span>
+                  </div>
                   <input
-                    type="text"
+                    type="tel"
+                    maxLength={10}
+                    placeholder="9876543210 (Max 10 digits)"
                     className="form-input"
                     value={buyerForm.contact}
-                    onChange={(e) => setBuyerForm({ ...buyerForm, contact: e.target.value })}
+                    onChange={(e) => setBuyerForm({ ...buyerForm, contact: e.target.value.replace(/\D/g, '').slice(0, 10) })}
                   />
                 </div>
               </div>

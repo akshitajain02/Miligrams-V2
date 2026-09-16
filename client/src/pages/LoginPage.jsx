@@ -10,7 +10,7 @@ import { soundFX } from '../utils/audioFX';
 
 export default function LoginPage({ lang = 'hi' }) {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, isAuthenticated, currentUser, currentRole } = useAuth();
 
   // Selected role for login: 'farmer' | 'warehouse' | 'buyer' | 'admin'
   const [selectedRole, setSelectedRole] = useState(null);
@@ -173,6 +173,17 @@ export default function LoginPage({ lang = 'hi' }) {
       return;
     }
 
+    const cleanPhone = (regForm.contact || '').replace(/\D/g, '');
+    if (!cleanPhone || cleanPhone.length !== 10) {
+      setFeedback({ 
+        type: 'error', 
+        message: lang === 'hi' 
+          ? 'मोबाइल नंबर ठीक 10 अंकों का होना चाहिए (जैसे: 9876543210)' 
+          : 'Mobile number must be exactly 10 digits (e.g. 9876543210)' 
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     setFeedback(null);
 
@@ -181,8 +192,8 @@ export default function LoginPage({ lang = 'hi' }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: regForm.name,
-          contact: regForm.contact,
+          name: regForm.name.trim(),
+          contact: cleanPhone,
           location: regForm.location,
           agriStackId: regForm.agriStackId || `AGRI-IN-2026-${Math.floor(1000 + Math.random() * 9000)}`,
           aadhaarNumber: regForm.aadhaarNumber,
@@ -232,6 +243,36 @@ export default function LoginPage({ lang = 'hi' }) {
             : 'Select your organizational persona to access your dedicated cryptographic portal'}
         </p>
       </div>
+
+      {/* Active Session Quick Return Shortcut */}
+      {isAuthenticated && currentUser && (
+        <div style={{ background: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.25)', borderRadius: '12px', padding: '1rem 1.4rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#34d399' }}>
+              <CheckCircle2 size={20} />
+            </div>
+            <div>
+              <div style={{ fontSize: '0.92rem', fontWeight: 800, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span>{currentUser.name || currentUser.uniqueId}</span>
+                <span className="badge" style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#34d399', borderColor: 'rgba(16, 185, 129, 0.3)', textTransform: 'capitalize', fontSize: '0.7rem' }}>
+                  {currentRole}
+                </span>
+              </div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>
+                {lang === 'hi' ? 'सक्रिय सत्र उपलब्ध है — सीधे अपने पोर्टल में जाएं या नीचे नई भूमिका चुनें।' : 'Active session present — jump into your portal or switch role below.'}
+              </div>
+            </div>
+          </div>
+          <button 
+            onClick={() => navigate(`/${currentRole || 'farmer'}`)}
+            className="btn btn-primary btn-sm"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+          >
+            <span>{lang === 'hi' ? 'सीधे पोर्टल पर जाएं' : 'Enter Portal'}</span>
+            <ArrowRight size={14} />
+          </button>
+        </div>
+      )}
 
       {/* Step 1: Role Selection ("Login As") */}
       {!selectedRole && (
@@ -496,17 +537,30 @@ export default function LoginPage({ lang = 'hi' }) {
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.35rem' }}>
-                      {lang === 'hi' ? 'मोबाइल नंबर *' : 'Contact Number *'}
+                      {lang === 'hi' ? 'मोबाइल नंबर * (10 अंक)' : 'Contact Mobile Number * (10 Digits)'}
                     </label>
                     <input
-                      type="text"
+                      type="tel"
                       required
-                      placeholder="+91 98765 00000"
+                      maxLength={10}
+                      pattern="[0-9]{10}"
+                      placeholder="9876543210"
                       value={regForm.contact}
-                      onChange={e => setRegForm({ ...regForm, contact: e.target.value })}
+                      onChange={e => {
+                        const digitsOnly = e.target.value.replace(/\D/g, '').slice(0, 10);
+                        setRegForm({ ...regForm, contact: digitsOnly });
+                      }}
                       className="input-field"
-                      style={{ width: '100%' }}
+                      style={{ width: '100%', fontFamily: 'JetBrains Mono, monospace', letterSpacing: '0.04em' }}
                     />
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.3rem', fontSize: '0.72rem' }}>
+                      <span style={{ color: 'var(--text-muted)' }}>
+                        {lang === 'hi' ? 'केवल 10 अंकों का मान्य नंबर' : 'Exactly 10 numeric digits'}
+                      </span>
+                      <span style={{ fontWeight: 800, color: regForm.contact.length === 10 ? '#34d399' : regForm.contact.length > 0 ? '#fbbf24' : 'var(--text-muted)' }}>
+                        {regForm.contact.length}/10
+                      </span>
+                    </div>
                   </div>
                 </div>
 
