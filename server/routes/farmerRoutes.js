@@ -8,7 +8,7 @@ const Farmer = require('../models/Farmer');
  */
 router.post('/register', async (req, res) => {
   try {
-    const { name, uniqueId, contact, location } = req.body;
+    const { name, uniqueId, contact, location, agriStackId, aadhaarNumber, photoUrl, khatauniNumber } = req.body;
 
     if (!name) {
       return res.status(400).json({ success: false, message: 'Farmer name is required' });
@@ -29,13 +29,163 @@ router.post('/register', async (req, res) => {
       uniqueId: farmerId,
       contact: contact || '',
       location: location || 'Punjab, India',
+      agriStackId: agriStackId || `AGRI-IN-2026-${Math.floor(1000 + Math.random() * 9000)}`,
+      aadhaarNumber: aadhaarNumber || '',
+      photoUrl: photoUrl || '',
+      khatauniNumber: khatauniNumber || '',
+      kycStatus: 'pending',
+      kycSubmittedAt: new Date(),
+      rating: 5.0,
+      totalReviews: 0,
+      reviews: [],
       cropsOwned: []
     });
 
     res.status(201).json({
       success: true,
-      message: 'Farmer registered successfully',
+      message: 'Farmer registered successfully. KYC verification is pending review.',
       farmer: newFarmer
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+/**
+ * @route   PUT /api/farmers/:id/kyc-submit
+ * @desc    Farmer submits or updates KYC documents
+ */
+router.put('/:id/kyc-submit', async (req, res) => {
+  try {
+    const id = req.params.id;
+    let farmer = await Farmer.findOne({ uniqueId: id });
+    if (!farmer && id.match(/^[0-9a-fA-F]{24}$/)) {
+      farmer = await Farmer.findById(id);
+    }
+
+    if (!farmer) {
+      return res.status(404).json({ success: false, message: 'Farmer not found' });
+    }
+
+    const { agriStackId, aadhaarNumber, photoUrl, khatauniNumber, name, contact, location } = req.body;
+
+    if (agriStackId) farmer.agriStackId = agriStackId;
+    if (aadhaarNumber) farmer.aadhaarNumber = aadhaarNumber;
+    if (photoUrl) farmer.photoUrl = photoUrl;
+    if (khatauniNumber) farmer.khatauniNumber = khatauniNumber;
+    if (name) farmer.name = name;
+    if (contact) farmer.contact = contact;
+    if (location) farmer.location = location;
+
+    farmer.kycStatus = 'pending';
+    farmer.kycSubmittedAt = new Date();
+    farmer.kycRejectionReason = '';
+
+    await farmer.save();
+
+    res.json({
+      success: true,
+      message: 'KYC documents submitted successfully. Verification status: Pending.',
+      farmer
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+/**
+ * @route   PUT /api/farmers/:id/kyc-status
+ * @desc    Admin marks farmer KYC as verified or rejected
+ */
+router.put('/:id/kyc-status', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { status, rejectionReason } = req.body;
+
+    if (!['pending', 'verified', 'rejected'].includes(status)) {
+      return res.status(400).json({ success: false, message: 'Invalid KYC status' });
+    }
+
+    let farmer = await Farmer.findOne({ uniqueId: id });
+    if (!farmer && id.match(/^[0-9a-fA-F]{24}$/)) {
+      farmer = await Farmer.findById(id);
+    }
+
+    if (!farmer) {
+      return res.status(404).json({ success: false, message: 'Farmer not found' });
+    }
+
+    farmer.kycStatus = status;
+    farmer.kycReviewedAt = new Date();
+    if (status === 'rejected') {
+      farmer.kycRejectionReason = rejectionReason || 'Documents could not be verified.';
+    } else if (status === 'verified') {
+      farmer.kycRejectionReason = '';
+    }
+
+    await farmer.save();
+
+    res.json({
+      success: true,
+      message: `Farmer KYC status updated to ${status}.`,
+      farmer
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+/**
+ * @route   POST /api/farmers/:id/review
+ * @desc    Buyer rates and reviews a farmer
+ */
+router.post('/:id/review', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { buyerId, buyerName, rating, comment, cropType } = req.body;
+
+    const numRating = Number(rating);
+    if (!numRating || numRating < 1 || numRating > 5) {
+      return res.status(400).json({ success: false, message: 'Rating must be a number between 1 and 5' });
+    }
+
+    let farmer = await Farmer.findOne({ uniqueId: id });
+    if (!farmer && id.match(/^[0-9a-fA-F]{24}$/)) {
+      farmer = await Farmer.findById(id);
+    }
+
+    if (!farmer) {
+      return res.status(404).json({ success: false, message: 'Farmer not found' });
+    }
+
+    const reviewEntry = {
+      buyerId: buyerId || 'ANON-BUYER',
+      buyerName: buyerName || 'Mandi Merchant',
+      rating: numRating,
+      comment: comment || '',
+      cropType: cropType || '',
+      createdAt: new Date()
+    };
+
+    farmer.reviews.push(reviewEntry);
+    farmer.totalReviews = farmer.reviews.length;
+
+    // Compute updated average rating
+    const totalScore = farmer.reviews.reduce((acc, r) => acc + r.rating, 0);
+    farmer.rating = Number((totalScore / farmer.totalReviews).toFixed(1));
+
+    await farmer.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'Review recorded successfully! Farmer rating updated.',
+      farmer: {
+        uniqueId: farmer.uniqueId,
+        name: farmer.name,
+        rating: farmer.rating,
+        totalReviews: farmer.totalReviews,
+        reviews: farmer.reviews
+      }
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

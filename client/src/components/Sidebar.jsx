@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Sprout, Building2, ShoppingBag, ShieldCheck, Layers, Globe, ChevronRight, Shield, Zap, Sparkles } from 'lucide-react';
+import { 
+  Sprout, Building2, ShoppingBag, ShieldCheck, Layers, 
+  Globe, ChevronRight, Sun, Moon, LogIn, LogOut, 
+  CheckCircle2, AlertTriangle, User, Sparkles 
+} from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import RoleSelectModal from './RoleSelectModal';
 
-export default function Sidebar({ lang = 'hi', setLang }) {
+export default function Sidebar({ lang = 'hi', setLang, theme = 'dark', toggleTheme }) {
   const [chainValid, setChainValid] = useState(true);
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { isAuthenticated, currentUser, currentRole, logout } = useAuth();
 
   useEffect(() => {
     fetch('/api/ledger/verify-chain')
@@ -20,23 +26,31 @@ export default function Sidebar({ lang = 'hi', setLang }) {
       .catch(() => setChainValid(true));
   }, [location.pathname]);
 
-  // Determine active portal persona based on current route
+  // Determine active portal persona based on current route or auth role
   const getRoleInfo = () => {
-    const p = location.pathname;
-    if (p.startsWith('/warehouse')) {
+    const roleId = currentRole || (location.pathname.startsWith('/warehouse') ? 'warehouse' :
+      location.pathname.startsWith('/buyer') ? 'buyer' :
+      location.pathname.startsWith('/admin') ? 'admin' : 'farmer');
+
+    if (roleId === 'warehouse') {
       return { id: 'warehouse', nameHi: 'गोदाम प्रबंधक', nameEn: 'Warehouse Hub', icon: Building2, color: '#f59e0b' };
     }
-    if (p.startsWith('/buyer')) {
+    if (roleId === 'buyer') {
       return { id: 'buyer', nameHi: 'व्यापारी मंडी', nameEn: 'Commodity Buyer', icon: ShoppingBag, color: '#06b6d4' };
     }
-    if (p.startsWith('/admin')) {
+    if (roleId === 'admin') {
       return { id: 'admin', nameHi: 'सिस्टम एडमिन', nameEn: 'Ledger Admin', icon: ShieldCheck, color: '#8b5cf6' };
     }
     return { id: 'farmer', nameHi: 'किसान पोर्टल', nameEn: 'Farmer Portal', icon: Sprout, color: '#10b981' };
   };
 
-  const currentRole = getRoleInfo();
-  const RoleIcon = currentRole.icon;
+  const activeRole = getRoleInfo();
+  const RoleIcon = activeRole.icon;
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <>
@@ -52,29 +66,75 @@ export default function Sidebar({ lang = 'hi', setLang }) {
           </div>
         </div>
 
-        {/* Active Role Selector Card */}
-        <div className="sidebar-role-card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-            <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-              {lang === 'hi' ? 'सक्रिय कार्यक्षेत्र' : 'ACTIVE PERSONA'}
-            </span>
-            <div style={{ width: '26px', height: '26px', borderRadius: '6px', background: `${currentRole.color}20`, color: currentRole.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <RoleIcon size={15} />
+        {/* User Session & Role Card */}
+        {isAuthenticated && currentUser ? (
+          <div className="sidebar-role-card" style={{ marginBottom: '0.9rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
+              <span style={{ fontSize: '0.68rem', fontWeight: 800, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                {lang === 'hi' ? 'सक्रिय खाता' : 'LOGGED IN'}
+              </span>
+              <div style={{ width: '24px', height: '24px', borderRadius: '6px', background: `${activeRole.color}20`, color: activeRole.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <RoleIcon size={14} />
+              </div>
+            </div>
+
+            <div style={{ fontSize: '0.96rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.2rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {currentUser.name || currentUser.uniqueId}
+            </div>
+
+            {/* KYC Badge if Farmer */}
+            {currentUser.role === 'farmer' && (
+              <div style={{ marginBottom: '0.5rem' }}>
+                {currentUser.kycStatus === 'verified' ? (
+                  <span className="badge" style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#34d399', borderColor: 'rgba(16, 185, 129, 0.3)', fontSize: '0.66rem', padding: '0.15rem 0.45rem' }}>
+                    <CheckCircle2 size={10} />
+                    <span>KYC Verified</span>
+                  </span>
+                ) : (
+                  <span className="badge" style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#fbbf24', borderColor: 'rgba(245, 158, 11, 0.3)', fontSize: '0.66rem', padding: '0.15rem 0.45rem' }}>
+                    <AlertTriangle size={10} />
+                    <span>KYC Pending</span>
+                  </span>
+                )}
+              </div>
+            )}
+
+            <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.45rem' }}>
+              <button
+                onClick={() => setIsRoleModalOpen(true)}
+                className="sidebar-switch-role-btn"
+                style={{ flex: 1 }}
+                title="Switch portal workspace"
+              >
+                <span>{lang === 'hi' ? 'भूमिका' : 'Role'}</span>
+                <ChevronRight size={13} />
+              </button>
+
+              <button
+                onClick={handleLogout}
+                className="sidebar-switch-role-btn"
+                style={{ width: 'auto', padding: '0.35rem 0.5rem', color: '#fb7185', borderColor: 'rgba(244, 63, 94, 0.25)' }}
+                title="Log out"
+              >
+                <LogOut size={13} />
+              </button>
             </div>
           </div>
-
-          <div style={{ fontSize: '1.02rem', fontWeight: 800, color: currentRole.color, marginBottom: '0.65rem' }}>
-            {lang === 'hi' ? currentRole.nameHi : currentRole.nameEn}
+        ) : (
+          <div className="sidebar-role-card" style={{ marginBottom: '0.9rem', textAlign: 'center' }}>
+            <p style={{ fontSize: '0.76rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
+              {lang === 'hi' ? 'पोर्टल में प्रवेश के लिए लॉगिन करें' : 'Sign in to access portals'}
+            </p>
+            <button
+              onClick={() => navigate('/login')}
+              className="btn btn-primary btn-sm"
+              style={{ width: '100%', fontSize: '0.76rem' }}
+            >
+              <LogIn size={13} />
+              <span>{lang === 'hi' ? 'लॉगिन करें' : 'Sign In'}</span>
+            </button>
           </div>
-
-          <button
-            onClick={() => setIsRoleModalOpen(true)}
-            className="sidebar-switch-role-btn"
-          >
-            <span>{lang === 'hi' ? 'भूमिका बदलें' : 'Switch Workspace'}</span>
-            <ChevronRight size={14} />
-          </button>
-        </div>
+        )}
 
         {/* Navigation Links */}
         <nav className="sidebar-nav">
@@ -87,15 +147,15 @@ export default function Sidebar({ lang = 'hi', setLang }) {
             end
             className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active-farmer' : ''}`}
           >
-            <span className="sidebar-nav-icon"><Layers size={18} /></span>
-            <span>{lang === 'hi' ? 'होम व नेविगेटर' : 'Home & Navigator'}</span>
+            <span className="sidebar-nav-icon"><Layers size={17} /></span>
+            <span>{lang === 'hi' ? 'होम व नेविगेटर' : 'Home & Overview'}</span>
           </NavLink>
 
           <NavLink
             to="/farmer"
             className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active-farmer' : ''}`}
           >
-            <span className="sidebar-nav-icon"><Sprout size={18} /></span>
+            <span className="sidebar-nav-icon"><Sprout size={17} /></span>
             <span>{lang === 'hi' ? 'किसान पोर्टल' : 'Farmer Voice Portal'}</span>
           </NavLink>
 
@@ -103,35 +163,62 @@ export default function Sidebar({ lang = 'hi', setLang }) {
             to="/warehouse"
             className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active-warehouse' : ''}`}
           >
-            <span className="sidebar-nav-icon"><Building2 size={18} /></span>
-            <span>{lang === 'hi' ? 'गोदाम / साइलो' : 'Smart Warehouse Silos'}</span>
+            <span className="sidebar-nav-icon"><Building2 size={17} /></span>
+            <span>{lang === 'hi' ? 'गोदाम / साइलो' : 'Smart Warehouse'}</span>
           </NavLink>
 
           <NavLink
             to="/buyer"
             className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active-buyer' : ''}`}
           >
-            <span className="sidebar-nav-icon"><ShoppingBag size={18} /></span>
-            <span>{lang === 'hi' ? 'व्यापारी मंडी' : 'Buyer Fair-Trade'}</span>
+            <span className="sidebar-nav-icon"><ShoppingBag size={17} /></span>
+            <span>{lang === 'hi' ? 'व्यापारी मंडी' : 'Buyer Marketplace'}</span>
           </NavLink>
 
           <NavLink
             to="/admin"
             className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active-admin' : ''}`}
           >
-            <span className="sidebar-nav-icon"><ShieldCheck size={18} /></span>
-            <span>{lang === 'hi' ? 'एडमिन व लेजर' : 'Ledger & Aging Engine'}</span>
+            <span className="sidebar-nav-icon"><ShieldCheck size={17} /></span>
+            <span>{lang === 'hi' ? 'एडमिन व लेजर' : 'Admin & Governance'}</span>
+          </NavLink>
+
+          {/* Dedicated Login Link */}
+          <NavLink
+            to="/login"
+            className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active-farmer' : ''}`}
+            style={{ marginTop: 'auto', borderTop: '1px solid var(--border)' }}
+          >
+            <span className="sidebar-nav-icon"><LogIn size={16} /></span>
+            <span>{lang === 'hi' ? 'लॉगिन / भूमिका' : 'Login / Switch Role'}</span>
           </NavLink>
         </nav>
 
         {/* Sidebar Footer */}
         <div className="sidebar-footer">
-          {/* Language Switcher */}
-          <div className="sidebar-lang-container">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.76rem', color: '#94a3b8', fontWeight: 700 }}>
-              <Globe size={14} color="#10b981" />
-              <span>{lang === 'hi' ? 'भाषा' : 'Language'}</span>
-            </div>
+          {/* Controls: Theme Switch & Language Toggle */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              className="btn btn-secondary btn-sm"
+              style={{ padding: '0.28rem 0.55rem', fontSize: '0.72rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+            >
+              {theme === 'dark' ? (
+                <>
+                  <Sun size={13} color="#f59e0b" />
+                  <span>Light</span>
+                </>
+              ) : (
+                <>
+                  <Moon size={13} color="#38bdf8" />
+                  <span>Dark</span>
+                </>
+              )}
+            </button>
+
+            {/* Language Switcher */}
             <div className="sidebar-lang-toggle">
               <button
                 className={`lang-btn ${lang === 'hi' ? 'active' : ''}`}
@@ -160,8 +247,8 @@ export default function Sidebar({ lang = 'hi', setLang }) {
             <div className={`pulsing-dot ${chainValid ? 'pulsing-dot-green' : 'pulsing-dot-red'}`} />
             <span>
               {chainValid
-                ? (lang === 'hi' ? 'लेजर अखंड: SHA-256 सुरक्षित' : 'Node Active | SHA-256 Sealed')
-                : (lang === 'hi' ? 'चेतावनी: लेजर में छेड़छाड़!' : 'Alert: Tamper Detected!')}
+                ? (lang === 'hi' ? 'लेजर सुरक्षित (SHA-256)' : 'Ledger Active | Sealed')
+                : (lang === 'hi' ? 'चेतावनी: छेड़छाड़!' : 'Alert: Tamper Detected!')}
             </span>
           </div>
         </div>
@@ -171,7 +258,7 @@ export default function Sidebar({ lang = 'hi', setLang }) {
       <RoleSelectModal
         isOpen={isRoleModalOpen}
         onClose={() => setIsRoleModalOpen(false)}
-        currentRole={currentRole.id}
+        currentRole={activeRole.id}
         lang={lang}
       />
     </>

@@ -1,14 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, AlertOctagon, RefreshCw, Search, ShieldAlert, RotateCcw, UserPlus, Building2, ShoppingBag, CheckCircle2, AlertCircle, Clock, Play, Cpu, Database, Link2 } from 'lucide-react';
+import { 
+  ShieldCheck, AlertOctagon, RefreshCw, Search, ShieldAlert, 
+  RotateCcw, UserPlus, Building2, ShoppingBag, CheckCircle2, 
+  AlertCircle, Clock, Play, Cpu, Database, Link2, FileText, 
+  X, AlertTriangle, Star, Check, Shield, Award, User
+} from 'lucide-react';
 import BlockCard from '../components/BlockCard';
 
 export default function AdminPortal({ lang = 'hi' }) {
-  const [activeTab, setActiveTab] = useState('ledger'); // 'ledger' | 'aging' | 'participants' | 'register'
+  const [activeTab, setActiveTab] = useState('kyc'); // 'kyc' | 'ledger' | 'aging' | 'participants' | 'register'
   const [blocks, setBlocks] = useState([]);
   const [verification, setVerification] = useState({ isValid: true, chainLength: 0, summary: 'Checking...' });
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [tamperStatus, setTamperStatus] = useState(null);
+
+  // KYC Verification Hub states
+  const [kycFilter, setKycFilter] = useState('all'); // 'all' | 'pending' | 'verified' | 'rejected'
+  const [rejectionModalFarmer, setRejectionModalFarmer] = useState(null);
+  const [rejectionReasonText, setRejectionReasonText] = useState('');
+  const [isUpdatingKyc, setIsUpdatingKyc] = useState(false);
+  const [kycSuccessMsg, setKycSuccessMsg] = useState(null);
 
   // Aging check results
   const [agingReport, setAgingReport] = useState(null);
@@ -112,6 +124,34 @@ export default function AdminPortal({ lang = 'hi' }) {
       fetchLedgerData();
     } catch (err) {
       alert(`Restore failed: ${err.message}`);
+    }
+  };
+
+  const handleUpdateKycStatus = async (farmerUniqueId, newStatus, reason = '') => {
+    setIsUpdatingKyc(true);
+    setKycSuccessMsg(null);
+    try {
+      const res = await fetch(`/api/farmers/${farmerUniqueId}/kyc-status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus, rejectionReason: reason })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || 'Failed to update KYC status');
+      }
+      setKycSuccessMsg(
+        lang === 'hi' 
+          ? `किसान (${farmerUniqueId}) का KYC '${newStatus === 'verified' ? 'सत्यापित (Verified)' : 'अस्वीकृत (Rejected)'}' कर दिया गया!`
+          : `Farmer (${farmerUniqueId}) KYC updated to '${newStatus}'!`
+      );
+      setRejectionModalFarmer(null);
+      setRejectionReasonText('');
+      await fetchLedgerData();
+    } catch (err) {
+      alert(`KYC Update Error: ${err.message}`);
+    } finally {
+      setIsUpdatingKyc(false);
     }
   };
 
@@ -236,6 +276,20 @@ export default function AdminPortal({ lang = 'hi' }) {
       {/* Navigation Tabs */}
       <div style={{ display: 'flex', gap: '0.65rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
         <button
+          onClick={() => setActiveTab('kyc')}
+          className={`btn ${activeTab === 'kyc' ? 'btn-primary' : 'btn-secondary'}`}
+          style={activeTab === 'kyc' ? { background: '#10b981', borderColor: '#10b981' } : {}}
+        >
+          <ShieldCheck size={16} />
+          <span>{lang === 'hi' ? 'किसान केवाईसी सत्यापन' : 'Farmer KYC Hub'}</span>
+          {farmersList.filter(f => f.kycStatus === 'pending').length > 0 && (
+            <span style={{ background: '#f59e0b', color: '#000', borderRadius: '9999px', fontSize: '0.68rem', padding: '0.1rem 0.45rem', fontWeight: 900 }}>
+              {farmersList.filter(f => f.kycStatus === 'pending').length}
+            </span>
+          )}
+        </button>
+
+        <button
           onClick={() => setActiveTab('ledger')}
           className={`btn ${activeTab === 'ledger' ? 'btn-primary' : 'btn-secondary'}`}
         >
@@ -267,6 +321,196 @@ export default function AdminPortal({ lang = 'hi' }) {
           <span>{lang === 'hi' ? 'नया भागीदार जोड़ें' : 'Register Actor'}</span>
         </button>
       </div>
+
+      {/* Tab 0: Farmer KYC Verification Hub */}
+      {activeTab === 'kyc' && (
+        <div>
+          {/* KYC Feedback Banner */}
+          {kycSuccessMsg && (
+            <div style={{ background: 'rgba(16, 185, 129, 0.12)', border: '1px solid rgba(16, 185, 129, 0.35)', color: '#34d399', padding: '1rem 1.4rem', borderRadius: 'var(--radius)', marginBottom: '1.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontWeight: 700 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <CheckCircle2 size={20} color="#10b981" />
+                <span>{kycSuccessMsg}</span>
+              </div>
+              <button onClick={() => setKycSuccessMsg(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#10b981' }}>
+                <X size={18} />
+              </button>
+            </div>
+          )}
+
+          {/* KYC Filter & Overview Bar */}
+          <div className="glass-panel" style={{ padding: '1.4rem 1.75rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.25rem' }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                <Shield size={20} color="#10b981" />
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
+                  {lang === 'hi' ? 'किसान केवाईसी व पहचान सत्यापन (Farmer KYC Hub)' : 'Farmer KYC Verification Governance'}
+                </h3>
+              </div>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.84rem', margin: 0 }}>
+                {lang === 'hi' 
+                  ? 'AgriStack आईडी, आधार संख्या व खतौनी भूलेख का सत्यापन करें। केवल सत्यापित किसानों की उपज मंडी में दिखेगी।' 
+                  : 'Inspect submitted credentials. Only approved farmers are eligible for Buyer Marketplace sales.'}
+              </p>
+            </div>
+
+            {/* Filter Pills */}
+            <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => setKycFilter('all')}
+                className={`btn btn-sm ${kycFilter === 'all' ? 'btn-primary' : 'btn-secondary'}`}
+              >
+                {lang === 'hi' ? `सभी (${farmersList.length})` : `All (${farmersList.length})`}
+              </button>
+              <button
+                onClick={() => setKycFilter('pending')}
+                className={`btn btn-sm ${kycFilter === 'pending' ? 'btn-primary' : 'btn-secondary'}`}
+                style={kycFilter === 'pending' ? { background: '#f59e0b', borderColor: '#f59e0b', color: '#000' } : {}}
+              >
+                <Clock size={13} />
+                <span>{lang === 'hi' ? `सत्यापन लंबित (${farmersList.filter(f => f.kycStatus === 'pending').length})` : `Pending (${farmersList.filter(f => f.kycStatus === 'pending').length})`}</span>
+              </button>
+              <button
+                onClick={() => setKycFilter('verified')}
+                className={`btn btn-sm ${kycFilter === 'verified' ? 'btn-primary' : 'btn-secondary'}`}
+                style={kycFilter === 'verified' ? { background: '#10b981', borderColor: '#10b981' } : {}}
+              >
+                <CheckCircle2 size={13} />
+                <span>{lang === 'hi' ? `सत्यापित (${farmersList.filter(f => f.kycStatus === 'verified').length})` : `Verified (${farmersList.filter(f => f.kycStatus === 'verified').length})`}</span>
+              </button>
+              <button
+                onClick={() => setKycFilter('rejected')}
+                className={`btn btn-sm ${kycFilter === 'rejected' ? 'btn-primary' : 'btn-secondary'}`}
+                style={kycFilter === 'rejected' ? { background: '#f43f5e', borderColor: '#f43f5e' } : {}}
+              >
+                <AlertTriangle size={13} />
+                <span>{lang === 'hi' ? `अस्वीकृत (${farmersList.filter(f => f.kycStatus === 'rejected').length})` : `Rejected (${farmersList.filter(f => f.kycStatus === 'rejected').length})`}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* KYC Farmers Review List */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '3rem' }}>
+            {farmersList
+              .filter(f => {
+                if (kycFilter === 'pending') return f.kycStatus === 'pending';
+                if (kycFilter === 'verified') return f.kycStatus === 'verified';
+                if (kycFilter === 'rejected') return f.kycStatus === 'rejected';
+                return true;
+              })
+              .map(farmer => {
+                const isVerified = farmer.kycStatus === 'verified';
+                const isRejected = farmer.kycStatus === 'rejected';
+
+                return (
+                  <div
+                    key={farmer.uniqueId}
+                    className="glass-panel"
+                    style={{
+                      padding: '1.5rem',
+                      borderLeft: isVerified ? '4px solid #10b981' : isRejected ? '4px solid #f43f5e' : '4px solid #f59e0b',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      flexWrap: 'wrap',
+                      gap: '1.25rem'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1.15rem', maxWidth: '680px' }}>
+                      <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: isVerified ? 'rgba(16, 185, 129, 0.15)' : isRejected ? 'rgba(244, 63, 94, 0.15)' : 'rgba(245, 158, 11, 0.15)', color: isVerified ? '#10b981' : isRejected ? '#f43f5e' : '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <User size={24} />
+                      </div>
+
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap', marginBottom: '0.35rem' }}>
+                          <strong style={{ fontSize: '1.12rem', color: 'var(--text-main)' }}>{farmer.name}</strong>
+                          <span className="font-mono" style={{ fontSize: '0.74rem', color: '#38bdf8', background: 'rgba(56, 189, 248, 0.1)', padding: '0.15rem 0.45rem', borderRadius: '4px' }}>
+                            {farmer.uniqueId}
+                          </span>
+
+                          <span className="badge" style={{ 
+                            background: isVerified ? 'rgba(16, 185, 129, 0.15)' : isRejected ? 'rgba(244, 63, 94, 0.15)' : 'rgba(245, 158, 11, 0.15)',
+                            color: isVerified ? '#34d399' : isRejected ? '#fb7185' : '#fbbf24',
+                            borderColor: isVerified ? 'rgba(16, 185, 129, 0.35)' : isRejected ? 'rgba(244, 63, 94, 0.35)' : 'rgba(245, 158, 11, 0.35)'
+                          }}>
+                            {isVerified ? '✓ AgriStack Verified' : isRejected ? '✗ KYC Rejected' : '⏳ Verification Pending'}
+                          </span>
+                        </div>
+
+                        <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '0.65rem' }}>
+                          <span>📍 {farmer.location}</span>
+                          <span>📞 {farmer.contact || 'N/A'}</span>
+                          <span>⭐ Rating: {farmer.rating || 5.0} ({farmer.totalReviews || 0} reviews)</span>
+                        </div>
+
+                        {/* KYC Credentials Badges */}
+                        <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap', fontSize: '0.78rem' }}>
+                          <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid var(--border)', padding: '0.3rem 0.65rem', borderRadius: '6px' }}>
+                            <span style={{ color: 'var(--text-light)', fontWeight: 700 }}>AgriStack ID: </span>
+                            <span className="font-mono" style={{ color: '#34d399' }}>{farmer.agriStackId || 'Not Provided'}</span>
+                          </div>
+
+                          <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid var(--border)', padding: '0.3rem 0.65rem', borderRadius: '6px' }}>
+                            <span style={{ color: 'var(--text-light)', fontWeight: 700 }}>Aadhaar: </span>
+                            <span className="font-mono" style={{ color: '#38bdf8' }}>{farmer.aadhaarNumber || 'Verified'}</span>
+                          </div>
+
+                          <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid var(--border)', padding: '0.3rem 0.65rem', borderRadius: '6px' }}>
+                            <span style={{ color: 'var(--text-light)', fontWeight: 700 }}>Khatauni / Land: </span>
+                            <span className="font-mono" style={{ color: '#fbbf24' }}>{farmer.khatauniNumber || 'Deed Verified'}</span>
+                          </div>
+                        </div>
+
+                        {isRejected && farmer.kycRejectionReason && (
+                          <div style={{ marginTop: '0.5rem', color: '#fb7185', fontSize: '0.78rem' }}>
+                            <strong>Rejection Note:</strong> {farmer.kycRejectionReason}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Admin Verification Actions */}
+                    <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'center' }}>
+                      {!isVerified && (
+                        <button
+                          onClick={() => handleUpdateKycStatus(farmer.uniqueId, 'verified')}
+                          disabled={isUpdatingKyc}
+                          className="btn btn-primary btn-sm"
+                          style={{ background: '#10b981', borderColor: '#10b981' }}
+                        >
+                          <CheckCircle2 size={14} />
+                          <span>{lang === 'hi' ? 'स्वीकृत करें (Approve)' : 'Approve & Verify'}</span>
+                        </button>
+                      )}
+
+                      {!isRejected && (
+                        <button
+                          onClick={() => {
+                            setRejectionModalFarmer(farmer);
+                            setRejectionReasonText('');
+                          }}
+                          disabled={isUpdatingKyc}
+                          className="btn btn-secondary btn-sm"
+                          style={{ color: '#fb7185', borderColor: 'rgba(244, 63, 94, 0.35)' }}
+                        >
+                          <X size={14} />
+                          <span>{lang === 'hi' ? 'अस्वीकृत करें (Reject)' : 'Reject'}</span>
+                        </button>
+                      )}
+
+                      {isVerified && (
+                        <span style={{ color: '#10b981', fontSize: '0.8rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                          <CheckCircle2 size={15} />
+                          <span>{lang === 'hi' ? 'मंडी में सक्षम' : 'Marketplace Active'}</span>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      )}
 
       {/* Tab 1: Ledger Explorer */}
       {activeTab === 'ledger' && (
@@ -625,6 +869,83 @@ export default function AdminPortal({ lang = 'hi' }) {
               </button>
             </div>
           </form>
+        </div>
+      )}
+
+      {/* Admin KYC Rejection Reason Modal */}
+      {rejectionModalFarmer && (
+        <div className="modal-overlay" onClick={() => setRejectionModalFarmer(null)}>
+          <div className="modal-content" style={{ maxWidth: '500px' }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(244, 63, 94, 0.15)', color: '#f43f5e', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <AlertTriangle size={20} />
+                </div>
+                <h3>
+                  <span>{lang === 'hi' ? 'केवाईसी अस्वीकृति कारण दर्ज करें' : 'Specify KYC Rejection Reason'}</span>
+                </h3>
+              </div>
+              <button className="modal-close" onClick={() => setRejectionModalFarmer(null)}>
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <p style={{ fontSize: '0.86rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+                {lang === 'hi'
+                  ? `आप किसान ${rejectionModalFarmer.name} (${rejectionModalFarmer.uniqueId}) का केवाईसी अस्वीकृत कर रहे हैं:`
+                  : `Rejecting KYC verification for ${rejectionModalFarmer.name} (${rejectionModalFarmer.uniqueId}):`}
+              </p>
+
+              <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+                {[
+                  'Aadhaar number invalid / mismatch',
+                  'Khatauni land deed document unclear',
+                  'AgriStack ID mismatch with records',
+                  'Incomplete contact details'
+                ].map(preReason => (
+                  <button
+                    key={preReason}
+                    type="button"
+                    onClick={() => setRejectionReasonText(preReason)}
+                    className="btn btn-secondary btn-sm"
+                    style={{ fontSize: '0.72rem', padding: '0.2rem 0.5rem' }}
+                  >
+                    + {preReason}
+                  </button>
+                ))}
+              </div>
+
+              <textarea
+                rows="3"
+                className="form-textarea"
+                placeholder={lang === 'hi' ? 'अस्वीकृति का स्पष्ट कारण लिखें...' : 'Type rejection explanation for the farmer...'}
+                value={rejectionReasonText}
+                onChange={e => setRejectionReasonText(e.target.value)}
+                style={{ width: '100%', marginBottom: '1.25rem' }}
+              />
+
+              <div className="modal-footer" style={{ padding: 0 }}>
+                <button
+                  type="button"
+                  onClick={() => setRejectionModalFarmer(null)}
+                  className="btn btn-secondary"
+                >
+                  {lang === 'hi' ? 'रद्द करें' : 'Cancel'}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleUpdateKycStatus(rejectionModalFarmer.uniqueId, 'rejected', rejectionReasonText)}
+                  disabled={isUpdatingKyc}
+                  className="btn btn-primary"
+                  style={{ background: '#f43f5e', borderColor: '#f43f5e', minWidth: '160px' }}
+                >
+                  {isUpdatingKyc ? 'Updating...' : (lang === 'hi' ? 'अस्वीकृत करें (Confirm)' : 'Confirm Rejection')}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

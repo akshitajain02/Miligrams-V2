@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Crop = require('../models/Crop');
 const Buyer = require('../models/Buyer');
+const Farmer = require('../models/Farmer');
 const Transaction = require('../models/Transaction');
 const BlockModel = require('../models/BlockModel');
 const { miligramsBlockchain } = require('../blockchain/blockchain');
@@ -9,11 +10,43 @@ const { miligramsBlockchain } = require('../blockchain/blockchain');
 /**
  * @route   GET /api/marketplace/browse
  * @desc    Browse all crops available for purchase (farm or warehouse stages)
+ *          CRITICAL RULE: Only crops from KYC-verified farmers are listed for sale!
  */
 router.get('/browse', async (req, res) => {
   try {
-    // Return all crops that are not yet marked as 'sold'
-    const availableCrops = await Crop.find({ currentStage: { $ne: 'sold' } }).sort({ createdAt: -1 });
+    // Find all KYC-verified farmers
+    const verifiedFarmers = await Farmer.find({ kycStatus: 'verified' });
+    const verifiedFarmerIds = verifiedFarmers.map(f => f.uniqueId);
+
+    // Create a map for quick farmer lookup (rating, reviews, location)
+    const farmerMap = {};
+    verifiedFarmers.forEach(f => {
+      farmerMap[f.uniqueId] = {
+        rating: f.rating || 5.0,
+        totalReviews: f.totalReviews || 0,
+        kycStatus: f.kycStatus,
+        location: f.location
+      };
+    });
+
+    // Return only crops that are not yet marked as 'sold' AND belong to verified farmers
+    const rawAvailableCrops = await Crop.find({
+      currentStage: { $ne: 'sold' },
+      farmerId: { $in: verifiedFarmerIds }
+    }).sort({ createdAt: -1 });
+
+    // Attach farmer rating to crops
+    const availableCrops = rawAvailableCrops.map(crop => {
+      const fInfo = farmerMap[crop.farmerId] || { rating: 5.0, totalReviews: 0, kycStatus: 'verified' };
+      return {
+        ...crop.toObject(),
+        farmerRating: fInfo.rating,
+        farmerReviewsCount: fInfo.totalReviews,
+        farmerKycStatus: fInfo.kycStatus,
+        farmerLocation: fInfo.location
+      };
+    });
+
     const soldCrops = await Crop.find({ currentStage: 'sold' }).sort({ updatedAt: -1 });
 
     res.json({

@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Sprout, Package, Plus, RefreshCw, Layers, ShieldCheck, User, FileText, CheckCircle2, X, Mic, MicOff, Volume2, Calendar, Scale, AlertTriangle, FastForward, Building2, ShoppingBag, Sparkles, Award } from 'lucide-react';
+import { 
+  Sprout, Package, Plus, RefreshCw, Layers, ShieldCheck, User, 
+  FileText, CheckCircle2, X, Mic, MicOff, Volume2, Calendar, Scale, 
+  AlertTriangle, FastForward, Building2, ShoppingBag, Sparkles, Award, Shield, Lock
+} from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import KisanReceiptModal from '../components/KisanReceiptModal';
 import CropHistoryModal from '../components/CropHistoryModal';
 import { startVoiceRecognition, parseSpokenCrop, speakText } from '../utils/speechUtils';
@@ -7,18 +12,31 @@ import { translations } from '../utils/translations';
 
 export default function FarmerPortal({ lang = 'hi' }) {
   const t = translations[lang] || translations.hi;
+  const { currentUser } = useAuth();
 
   const [crops, setCrops] = useState([]);
   const [farmers, setFarmers] = useState([]);
-  const [selectedFarmerId, setSelectedFarmerId] = useState('');
+  const [selectedFarmerId, setSelectedFarmerId] = useState(
+    currentUser?.role === 'farmer' ? currentUser.uniqueId : ''
+  );
   const [loading, setLoading] = useState(true);
 
   // Modals state
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isKycModalOpen, setIsKycModalOpen] = useState(false);
   const [selectedCrop, setSelectedCrop] = useState(null);
   const [mintedBlock, setMintedBlock] = useState(null);
+
+  // KYC submission form state
+  const [kycForm, setKycForm] = useState({
+    agriStackId: '',
+    aadhaarNumber: '',
+    khatauniNumber: '',
+    photoUrl: ''
+  });
+  const [isSubmittingKyc, setIsSubmittingKyc] = useState(false);
 
   // Form state
   const [selectedCropTile, setSelectedCropTile] = useState('शरबती गेहूं (Wheat)');
@@ -192,6 +210,42 @@ export default function FarmerPortal({ lang = 'hi' }) {
     }
   };
 
+  const handleOpenKycModal = () => {
+    if (activeFarmer) {
+      setKycForm({
+        agriStackId: activeFarmer.agriStackId || '',
+        aadhaarNumber: activeFarmer.aadhaarNumber || '',
+        khatauniNumber: activeFarmer.khatauniNumber || '',
+        photoUrl: activeFarmer.photoUrl || ''
+      });
+    }
+    setIsKycModalOpen(true);
+  };
+
+  const handleSubmitKyc = async (e) => {
+    e.preventDefault();
+    if (!activeFarmer) return;
+    setIsSubmittingKyc(true);
+    try {
+      const res = await fetch(`/api/farmers/${activeFarmer.uniqueId}/kyc-submit`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(kycForm)
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || 'Failed to submit KYC');
+      }
+      await fetchData();
+      setIsKycModalOpen(false);
+      setSuccessBanner(lang === 'hi' ? 'KYC दस्तावेज सफलतापूर्वक जमा किए गए! सत्यापन प्रक्रियाधीन है।' : 'KYC documents submitted successfully! Verification in progress.');
+    } catch (err) {
+      alert(`KYC Submission Error: ${err.message}`);
+    } finally {
+      setIsSubmittingKyc(false);
+    }
+  };
+
   const handleSimulateAging = async (cropId) => {
     try {
       const res = await fetch('/api/crops/simulate-aging', {
@@ -284,6 +338,98 @@ export default function FarmerPortal({ lang = 'hi' }) {
             <span>{t.addCropBtn}</span>
           </button>
         </div>
+      </div>
+
+      {/* Farmer KYC Authentication Banner */}
+      <div 
+        className="glass-panel" 
+        style={{ 
+          padding: '1.25rem 1.5rem', 
+          marginBottom: '1.75rem', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between', 
+          flexWrap: 'wrap', 
+          gap: '1rem',
+          borderLeft: activeFarmer?.kycStatus === 'verified' 
+            ? '4px solid #10b981' 
+            : activeFarmer?.kycStatus === 'rejected' 
+            ? '4px solid #f43f5e' 
+            : '4px solid #f59e0b',
+          background: activeFarmer?.kycStatus === 'verified' 
+            ? 'rgba(16, 185, 129, 0.06)' 
+            : activeFarmer?.kycStatus === 'rejected' 
+            ? 'rgba(244, 63, 94, 0.08)' 
+            : 'rgba(245, 158, 11, 0.08)'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', maxWidth: '720px' }}>
+          <div style={{ 
+            width: '42px', 
+            height: '42px', 
+            borderRadius: '10px', 
+            background: activeFarmer?.kycStatus === 'verified' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)', 
+            color: activeFarmer?.kycStatus === 'verified' ? '#10b981' : '#f59e0b',
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            flexShrink: 0
+          }}>
+            {activeFarmer?.kycStatus === 'verified' ? <ShieldCheck size={24} /> : <AlertTriangle size={24} />}
+          </div>
+
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap', marginBottom: '0.25rem' }}>
+              <h4 style={{ fontSize: '1.05rem', fontWeight: 800, margin: 0, color: 'var(--text-main)' }}>
+                {activeFarmer?.kycStatus === 'verified'
+                  ? (lang === 'hi' ? 'प्रमाणित किसान (AgriStack Verified Farmer)' : 'AgriStack Verified Producer')
+                  : activeFarmer?.kycStatus === 'rejected'
+                  ? (lang === 'hi' ? 'केवाईसी अस्वीकृत (KYC Rejected)' : 'KYC Verification Rejected')
+                  : (lang === 'hi' ? 'केवाईसी सत्यापन लंबित (KYC Pending — Verification in Progress)' : 'KYC Pending — Verification in Progress')}
+              </h4>
+
+              <span 
+                className="badge" 
+                style={{ 
+                  background: activeFarmer?.kycStatus === 'verified' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)',
+                  color: activeFarmer?.kycStatus === 'verified' ? '#34d399' : '#fbbf24',
+                  borderColor: activeFarmer?.kycStatus === 'verified' ? 'rgba(16, 185, 129, 0.4)' : 'rgba(245, 158, 11, 0.4)'
+                }}
+              >
+                {activeFarmer?.kycStatus === 'verified' ? '● Verified' : activeFarmer?.kycStatus === 'rejected' ? '● Rejected' : '● In Review'}
+              </span>
+            </div>
+
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.84rem', margin: 0, lineHeight: 1.45 }}>
+              {activeFarmer?.kycStatus === 'verified' ? (
+                lang === 'hi' 
+                  ? `AgriStack ID: ${activeFarmer.agriStackId || 'AGRI-PB-2026-8891'} • आधार: ${activeFarmer.aadhaarNumber || 'सत्यापित'} • मंडी में बिक्री व थोक खरीद सक्रिय है।`
+                  : `AgriStack ID: ${activeFarmer.agriStackId || 'AGRI-PB-2026-8891'} • Aadhaar Verified • Marketplace listings are active.`
+              ) : activeFarmer?.kycStatus === 'rejected' ? (
+                lang === 'hi'
+                  ? `अस्वीकृति कारण: ${activeFarmer.kycRejectionReason || 'दस्तावेज अस्पष्ट थे'}। कृपया सही दस्तावेज पुनः जमा करें।`
+                  : `Reason: ${activeFarmer.kycRejectionReason || 'Documents could not be verified'}. Please re-submit.`
+              ) : (
+                lang === 'hi'
+                  ? 'आप अपनी फसलें अपने आंतरिक रिकॉर्ड और पर्ची के लिए दर्ज कर सकते हैं, लेकिन जब तक एडमिन द्वारा आपका KYC स्वीकृत नहीं हो जाता, तब तक यह मंडी में बिक्री के लिए लिस्ट नहीं होगी।'
+                  : 'You can upload crops for personal records & receipts, but marketplace selling is locked until Admin verifies your KYC.'
+              )}
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={handleOpenKycModal}
+          className="btn btn-secondary btn-sm"
+          style={{ 
+            borderColor: activeFarmer?.kycStatus === 'verified' ? 'rgba(16, 185, 129, 0.4)' : 'rgba(245, 158, 11, 0.4)',
+            color: activeFarmer?.kycStatus === 'verified' ? '#34d399' : '#fbbf24',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          <Shield size={14} />
+          <span>{lang === 'hi' ? 'दस्तावेज देखें / अपडेट करें' : 'View / Update KYC'}</span>
+        </button>
       </div>
 
       {/* Voice Assistant Master Banner */}
@@ -537,13 +683,17 @@ export default function FarmerPortal({ lang = 'hi' }) {
                     <span>{t.viewReceipt}</span>
                   </button>
 
-                  <button
-                    onClick={() => openHistory(crop)}
-                    className="btn btn-secondary btn-sm"
-                  >
-                    <Layers size={15} />
-                    <span>{t.viewChain}</span>
-                  </button>
+                  {activeFarmer?.kycStatus === 'verified' ? (
+                    <span className="badge" style={{ background: 'rgba(16, 185, 129, 0.12)', color: '#34d399', borderColor: 'rgba(16, 185, 129, 0.3)' }}>
+                      <CheckCircle2 size={12} />
+                      <span>{lang === 'hi' ? 'मंडी में लाइव' : 'Live on Marketplace'}</span>
+                    </span>
+                  ) : (
+                    <span className="badge" style={{ background: 'rgba(245, 158, 11, 0.12)', color: '#fbbf24', borderColor: 'rgba(245, 158, 11, 0.3)' }}>
+                      <Lock size={12} />
+                      <span>{lang === 'hi' ? 'मंडी लॉक (KYC लंबित)' : 'Marketplace Locked (KYC)'}</span>
+                    </span>
+                  )}
 
                   {/* 15-day Aging test demo button */}
                   {crop.currentStage !== 'sold' && !isUnsellable && (
@@ -807,6 +957,153 @@ export default function FarmerPortal({ lang = 'hi' }) {
         onClose={() => setIsHistoryOpen(false)}
         lang={lang}
       />
+
+      {/* Farmer KYC Documents Modal */}
+      {isKycModalOpen && (
+        <div className="modal-overlay" onClick={() => setIsKycModalOpen(false)}>
+          <div className="modal-content" style={{ maxWidth: '600px' }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Shield size={20} />
+                </div>
+                <h3>
+                  <span>{lang === 'hi' ? 'किसान केवाईसी व पहचान दस्तावेज' : 'Farmer KYC Verification & Documents'}</span>
+                </h3>
+              </div>
+              <button className="modal-close" onClick={() => setIsKycModalOpen(false)}>
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="modal-body">
+              {/* Current Status Pill */}
+              <div style={{ background: activeFarmer?.kycStatus === 'verified' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(245, 158, 11, 0.1)', border: `1px solid ${activeFarmer?.kycStatus === 'verified' ? 'rgba(16, 185, 129, 0.3)' : 'rgba(245, 158, 11, 0.3)'}`, padding: '0.85rem 1.15rem', borderRadius: '10px', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div>
+                  <span style={{ fontSize: '0.74rem', color: 'var(--text-light)', fontWeight: 700, textTransform: 'uppercase' }}>
+                    {lang === 'hi' ? 'सत्यापन स्थिति' : 'CURRENT STATUS'}
+                  </span>
+                  <div style={{ fontSize: '1rem', fontWeight: 800, color: activeFarmer?.kycStatus === 'verified' ? '#34d399' : '#fbbf24', marginTop: '0.15rem' }}>
+                    {activeFarmer?.kycStatus === 'verified' ? '✓ Verified (सत्यापित)' : activeFarmer?.kycStatus === 'rejected' ? '✗ Rejected (अस्वीकृत)' : '⏳ Pending Review (लंबित)'}
+                  </div>
+                </div>
+
+                <div style={{ textAlign: 'right' }}>
+                  <span style={{ fontSize: '0.74rem', color: 'var(--text-light)', fontWeight: 700, textTransform: 'uppercase' }}>
+                    {lang === 'hi' ? 'किसान विशिष्ट आईडी' : 'FARMER ID'}
+                  </span>
+                  <div className="font-mono" style={{ fontSize: '0.9rem', color: '#38bdf8', fontWeight: 700, marginTop: '0.15rem' }}>
+                    {activeFarmer?.uniqueId}
+                  </div>
+                </div>
+              </div>
+
+              {activeFarmer?.kycStatus === 'rejected' && (
+                <div style={{ background: 'rgba(244, 63, 94, 0.1)', border: '1px solid rgba(244, 63, 94, 0.3)', color: '#fb7185', padding: '0.75rem 1rem', borderRadius: '8px', marginBottom: '1.25rem', fontSize: '0.85rem' }}>
+                  <strong>अस्वीकृति कारण:</strong> {activeFarmer.kycRejectionReason || 'Documents could not be verified'}
+                </div>
+              )}
+
+              <form onSubmit={handleSubmitKyc}>
+                <div style={{ marginBottom: '1rem' }}>
+                  <label className="form-label">
+                    {lang === 'hi' ? 'एग्रीस्टैक किसान आईडी (AgriStack ID) *' : 'AgriStack Farmer ID *'}
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. AGRI-PB-2026-8891"
+                    className="form-input"
+                    value={kycForm.agriStackId}
+                    onChange={e => setKycForm({ ...kycForm, agriStackId: e.target.value })}
+                    style={{ fontFamily: 'JetBrains Mono, monospace' }}
+                  />
+                  <small style={{ color: 'var(--text-muted)', fontSize: '0.74rem', marginTop: '0.2rem', display: 'block' }}>
+                    {lang === 'hi' ? 'भारत सरकार डिजिटल कृषि मिशन के तहत जारी आईडी' : 'Official Farmer ID under Digital Agri Mission'}
+                  </small>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                  <div>
+                    <label className="form-label">
+                      {lang === 'hi' ? 'आधार संख्या (12-Digit Aadhaar) *' : 'Aadhaar Number *'}
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      maxLength="14"
+                      placeholder="XXXX-XXXX-4321"
+                      className="form-input"
+                      value={kycForm.aadhaarNumber}
+                      onChange={e => setKycForm({ ...kycForm, aadhaarNumber: e.target.value })}
+                      style={{ fontFamily: 'JetBrains Mono, monospace' }}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="form-label">
+                      {lang === 'hi' ? 'खतौनी / भूलेख संख्या (Land Record)' : 'Land Record / Khatauni'}
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="KH-9021/26-PB"
+                      className="form-input"
+                      value={kycForm.khatauniNumber}
+                      onChange={e => setKycForm({ ...kycForm, khatauniNumber: e.target.value })}
+                      style={{ fontFamily: 'JetBrains Mono, monospace' }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: '1.25rem' }}>
+                  <label className="form-label">
+                    {lang === 'hi' ? 'दस्तावेज / फोटो प्रमाण URL' : 'Document Proof / Photo URL'}
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="https://..."
+                    className="form-input"
+                    value={kycForm.photoUrl}
+                    onChange={e => setKycForm({ ...kycForm, photoUrl: e.target.value })}
+                  />
+                  <small style={{ color: 'var(--text-muted)', fontSize: '0.74rem', marginTop: '0.25rem', display: 'block' }}>
+                    {lang === 'hi' ? 'या डिफ़ॉल्ट सत्यापित नमूना उपयोग करें' : 'Or use default sample verified deed'}
+                  </small>
+                </div>
+
+                <div className="modal-footer" style={{ padding: 0, marginTop: '1.5rem' }}>
+                  <button
+                    type="button"
+                    onClick={() => setIsKycModalOpen(false)}
+                    className="btn btn-secondary"
+                  >
+                    {t.cancel}
+                  </button>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmittingKyc}
+                    className="btn btn-primary"
+                    style={{ minWidth: '180px' }}
+                  >
+                    {isSubmittingKyc ? (
+                      <>
+                        <RefreshCw size={15} className="spin-slow" />
+                        <span>Submitting...</span>
+                      </>
+                    ) : (
+                      <>
+                        <ShieldCheck size={16} />
+                        <span>{lang === 'hi' ? 'दस्तावेज जमा करें' : 'Submit for Verification'}</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
