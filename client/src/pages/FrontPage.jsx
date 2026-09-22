@@ -6,7 +6,7 @@ import {
   Clock, Truck, Users, Layers, ChevronRight, Globe, Sun, Moon,
   HeartHandshake, Compass, Leaf
 } from 'lucide-react';
-import ContainerScroll from '../components/ContainerScroll';
+import PhotoCards3D from '../components/PhotoCards3D';
 import NatureBackground from '../components/NatureBackground';
 import { soundFX } from '../utils/audioFX';
 
@@ -247,114 +247,65 @@ export default function FrontPage({ lang = 'hi', setLang, theme = 'dark', toggle
       </header>
 
       {/* Main Hero Section with 3D Perspective Card (ContainerScroll) */}
+      {/* Main Hero Section with Compact 3D Photo Cards */}
       <main className="front-main-content">
-        <ContainerScroll
-          titleComponent={
-            <div className="front-hero-header">
-              <div className="nature-badge-pill">
-                <Leaf size={14} className="leaf-pulse-icon" />
-                <span>
-                  {lang === 'hi' 
-                    ? 'भारत की पहली प्रकृति-आधारित कृषि ब्लॉकचेन • BHARAT AGRI-LEDGER'
-                    : 'BHARAT\'S NATURE-POWERED AGRI-BLOCKCHAIN ECOSYSTEM'}
-                </span>
-              </div>
-
-              <h1 className="front-hero-title">
-                {lang === 'hi' ? (
-                  <>
-                    खेत से थाली तक, हर दाने का <br />
-                    <span className="front-title-gradient">सच्चा व सुरक्षित हिसाब</span>
-                  </>
-                ) : (
-                  <>
-                    From Soil to Settlement: <br />
-                    <span className="front-title-gradient">100% Traceable Agri-Blockchain</span>
-                  </>
-                )}
-              </h1>
-
-              <p className="front-hero-description">
-                {lang === 'hi'
-                  ? 'असाक्षर किसानों के लिए आवाज आधारित AI, 20,000 क्विंटल आधुनिक साइलो, 15-दिवसीय शेल्फ-लाइफ मूल्य सुरक्षा, और छेड़छाड़-रोधी SHA-256 क्रिप्टोग्राफिक लेजर।'
-                  : 'Empowering low-literacy farmers with voice-AI intake, 20,000 quintal climate silos, 15-day fair-trade aging, and mathematical zero-trust transparency.'}
-              </p>
-
-              <div className="front-hero-cta-group">
-                <button
-                  onClick={handleTryMiligrams}
-                  className="btn btn-primary btn-lg front-hero-primary-btn"
-                >
-                  <Sparkles size={18} />
-                  <span>{lang === 'hi' ? 'मिलीग्राम्स आज़माएँ (Try MiliGrams)' : 'Try MiliGrams Now'}</span>
-                  <ArrowRight size={18} />
-                </button>
-
-                <button
-                  onClick={() => navigate('/overview')}
-                  className="btn btn-secondary btn-lg"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
-                >
-                  <Compass size={17} />
-                  <span>{lang === 'hi' ? '3D इकोसिस्टम एक्सप्लोरर' : 'Explore 3D Ecosystem'}</span>
-                </button>
-              </div>
-
-              {/* Scroll guidance hint */}
-              <div className="front-scroll-hint">
-                <span>{lang === 'hi' ? 'नीचे स्क्रॉल करें और 3D कार्ड का आनंद लें' : 'Scroll down to tilt & interact with 3D supply chain'}</span>
-              </div>
-            </div>
-          }
-        >
-          {/* Card Inner Content: User's Nature Farm Banner with interactive nodes overlay */}
-          <div className="front-scroll-card-content">
-            <img 
-              src="/nature-farm-banner.jpg" 
-              alt="MiliGrams Farmer overlooking sustainable farm supply chain" 
-              className="front-banner-image"
-            />
-
-            {/* Floating Live Indicator Badge */}
-            <div className="front-banner-live-tag">
-              <span className="live-dot-ping" />
-              <span>{lang === 'hi' ? 'लाइव क्रिप्टोग्राफिक आपूर्ति श्रृंखला' : 'LIVE CRYPTOGRAPHIC SUPPLY CHAIN'}</span>
+        <section className="front-hero-section">
+          <div className="front-hero-header">
+            <div className="nature-badge-pill">
+              <Leaf size={14} className="leaf-pulse-icon" />
+              <span>
+                {lang === 'hi' 
+                  ? 'भारत की पहली प्रकृति-आधारित कृषि ब्लॉकचेन • BHARAT AGRI-LEDGER'
+                  : 'BHARAT\'S NATURE-POWERED AGRI-BLOCKCHAIN ECOSYSTEM'}
+              </span>
             </div>
 
-            {/* Bottom Infographic Pill Highlights */}
-            <div className="front-banner-infographic-bar">
-              <div className="front-banner-node-pill">
-                <Sprout size={15} color="#34d399" />
-                <span>Farm</span>
-              </div>
-              <ChevronRight size={14} color="#94a3b8" />
-              <div className="front-banner-node-pill">
-                <Truck size={15} color="#38bdf8" />
-                <span>Transport</span>
-              </div>
-              <ChevronRight size={14} color="#94a3b8" />
-              <div className="front-banner-node-pill">
-                <Building2 size={15} color="#fbbf24" />
-                <span>Storage</span>
-              </div>
-              <ChevronRight size={14} color="#94a3b8" />
-              <div className="front-banner-node-pill">
-                <ShoppingBag size={15} color="#22d3ee" />
-                <span>Market</span>
-              </div>
-              <ChevronRight size={14} color="#94a3b8" />
-              <div className="front-banner-node-pill">
-                <Users size={15} color="#c084fc" />
-                <span>Consumer</span>
-              </div>
-              <ChevronRight size={14} color="#94a3b8" />
-              <div className="front-banner-node-pill active-glow">
-                <ShieldCheck size={16} color="#4ade80" />
-                <span>Traceable Safe</span>
-              </div>
+            <h1 className="front-hero-title">
+              {lang === 'hi' ? (
+                <>
+                  खेत से थाली तक, हर दाने का <br />
+                  <span className="front-title-gradient">सच्चा व सुरक्षित हिसाब</span>
+                </>
+              ) : (
+                <>
+                  From Soil to Settlement: <br />
+                  <span className="front-title-gradient">100% Traceable Agri-Blockchain</span>
+                </>
+              )}
+            </h1>
+
+            <p className="front-hero-description">
+              {lang === 'hi'
+                ? 'असाक्षर किसानों के लिए आवाज आधारित AI, 20,000 क्विंटल आधुनिक साइलो, 15-दिवसीय शेल्फ-लाइफ मूल्य सुरक्षा, और छेड़छाड़-रोधी SHA-256 क्रिप्टोग्राफिक लेजर।'
+                : 'Empowering low-literacy farmers with voice-AI intake, 20,000 quintal climate silos, 15-day fair-trade aging, and mathematical zero-trust transparency.'}
+            </p>
+
+            <div className="front-hero-cta-group">
+              <button
+                onClick={handleTryMiligrams}
+                className="btn btn-primary btn-lg front-hero-primary-btn"
+              >
+                <Sparkles size={18} />
+                <span>{lang === 'hi' ? 'मिलीग्राम्स आज़माएँ (Try MiliGrams)' : 'Try MiliGrams Now'}</span>
+                <ArrowRight size={18} />
+              </button>
+
+              <button
+                onClick={() => navigate('/overview')}
+                className="btn btn-secondary btn-lg"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+              >
+                <Compass size={17} />
+                <span>{lang === 'hi' ? '3D इकोसिस्टम एक्सप्लोरर' : 'Explore 3D Ecosystem'}</span>
+              </button>
             </div>
           </div>
-        </ContainerScroll>
+
+          {/* Compact 3D Photo Cards - Space-efficient & interactive */}
+          <div style={{ marginTop: '2.5rem', marginBottom: '1.5rem' }}>
+            <PhotoCards3D lang={lang} />
+          </div>
+        </section>
 
         {/* Section 2: Supply Chain Nodes Breakdown */}
         <section id="ecosystem" className="front-section">
@@ -393,6 +344,28 @@ export default function FrontPage({ lang = 'hi', setLang, theme = 'dark', toggle
                 </div>
               );
             })}
+          </div>
+
+          {/* Visual Architecture Diagram from User Blueprint */}
+          <div className="front-architecture-banner glass-panel" style={{ marginTop: '2.5rem', padding: '1.5rem', borderRadius: '20px', textAlign: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <ShieldCheck size={20} color="#34d399" />
+                <span style={{ fontWeight: 800, fontSize: '0.98rem', color: 'var(--text-main)' }}>
+                  {lang === 'hi' ? 'प्रणाली स्थापत्य व लेजर सुरक्षा ढांचा' : 'System Architecture & Cryptographic Trust Blueprint'}
+                </span>
+              </div>
+              <span className="badge" style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', borderColor: 'rgba(56, 189, 248, 0.3)', fontSize: '0.72rem' }}>
+                SHA-256 Validated Node Network
+              </span>
+            </div>
+            <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border)', background: '#0a0f1d' }}>
+              <img 
+                src="/miligrams-ui-architecture.jpg" 
+                alt="MiliGrams UI Architecture Diagram" 
+                style={{ width: '100%', maxHeight: '420px', objectFit: 'contain', display: 'block', margin: '0 auto' }}
+              />
+            </div>
           </div>
         </section>
 

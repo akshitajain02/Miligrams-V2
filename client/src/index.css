@@ -2095,3 +2095,400 @@ code, .font-mono {
   }
 }
 
+/* ==========================================================================
+   PAGE SEPARATION & STANDALONE LAYOUT
+   ========================================================================== */
+
+.app-standalone {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main-viewport.app-viewport-full {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* ==========================================================================
+   COLLAPSIBLE & MOVABLE SIDEBAR
+   ========================================================================== */
+
+.app-sidebar {
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), padding 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.app-sidebar.collapsed {
+  width: 68px !important;
+  padding: 1rem 0.45rem !important;
+  align-items: center;
+}
+
+.sidebar-collapse-toggle-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.sidebar-collapse-toggle-btn:hover {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.sidebar-nav-item.collapsed {
+  justify-content: center;
+  padding: 0.65rem 0.5rem;
+}
+
+.sidebar-role-mini-card {
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.sidebar-role-mini-card:hover {
+  transform: scale(1.08);
+}
+
+.sidebar-mini-icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sidebar-mini-icon-btn:hover {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.sidebar-collapsed-viewport {
+  max-width: calc(100% - 68px);
+}
+
+/* ==========================================================================
+   AI FARMER MASCOT ("KISAN MITRA")
+   ========================================================================== */
+
+.farmer-mascot-widget {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.mascot-avatar-trigger {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  outline: none;
+}
+
+.mascot-avatar-trigger:hover {
+  transform: scale(1.1) translateY(-3px);
+}
+
+.mascot-avatar-frame {
+  position: relative;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(16, 185, 129, 0.4);
+}
+
+.mascot-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2.5px solid #10b981;
+  background: #0f172a;
+  display: block;
+}
+
+.mascot-pulse-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid #34d399;
+  opacity: 0.7;
+  animation: pulse-ring 2.2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+  pointer-events: none;
+}
+
+.mascot-help-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -4px;
+  background: #10b981;
+  color: #ffffff;
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 0.1rem 0.4rem;
+  border-radius: 9999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  border: 1.5px solid #0f172a;
+  letter-spacing: 0.02em;
+}
+
+.mascot-bubble-card {
+  width: 320px;
+  max-width: 90vw;
+  border-radius: 18px;
+  padding: 1.1rem;
+  margin-bottom: 0.85rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55), 0 0 30px rgba(16, 185, 129, 0.25);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  background: rgba(14, 20, 34, 0.95);
+  backdrop-filter: blur(24px);
+  animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mascot-bubble-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.mascot-bubble-body {
+  margin-bottom: 0.85rem;
+}
+
+.mascot-quick-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border);
+}
+
+.mascot-pill-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mascot-pill-btn:hover {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+.mascot-pill-btn.active {
+  background: rgba(16, 185, 129, 0.22);
+  color: #34d399;
+  border-color: #10b981;
+}
+
+/* ==========================================================================
+   COMPACT 3D PHOTO CARDS SHOWCASE
+   ========================================================================== */
+
+.photo-cards-3d-wrapper {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  perspective: 1200px;
+}
+
+.photo-cards-3d-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 1024px) {
+  .photo-cards-3d-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .photo-cards-3d-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.photo-3d-card {
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  background: rgba(14, 20, 34, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: border-color 0.25s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.photo-3d-card:hover {
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.photo-3d-image-frame {
+  position: relative;
+  width: 100%;
+  height: 175px;
+  overflow: hidden;
+  background: #0b1120;
+}
+
+.photo-3d-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+.photo-3d-card:hover .photo-3d-img {
+  transform: scale(1.07);
+}
+
+.photo-3d-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(10, 14, 23, 0.8) 100%);
+}
+
+.photo-3d-badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  border: 1px solid;
+  backdrop-filter: blur(10px);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.photo-3d-body {
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.photo-3d-title {
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0 0 0.45rem;
+  line-height: 1.3;
+}
+
+.photo-3d-sub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0 0 0.85rem;
+  flex: 1;
+}
+
+.photo-3d-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border);
+}
+
+/* Lightbox Modal */
+.photo-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(12px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+}
+
+.photo-modal-card {
+  width: 100%;
+  max-width: 600px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--surface-solid);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+}
+
+.photo-modal-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  background: #000000;
+}
+
+.photo-modal-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-modal-close-btn {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.photo-modal-close-btn:hover {
+  background: rgba(244, 63, 94, 0.8);
+}
+
+.photo-modal-content {
+  padding: 1.5rem;
+}
+

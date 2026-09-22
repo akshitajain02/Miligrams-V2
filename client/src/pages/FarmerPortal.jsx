@@ -354,6 +354,17 @@ export default function FarmerPortal({ lang = 'hi' }) {
             <span>{lang === 'hi' ? '📖 ट्यूटोरियल' : '📖 Tour'}</span>
           </button>
 
+          {/* AI Farmer Mascot Helper Trigger */}
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent('open-kisan-mascot', { detail: { tipIndex: 0 } }))}
+            className="btn btn-secondary"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', borderColor: 'rgba(16, 185, 129, 0.45)', color: '#34d399', background: 'rgba(16, 185, 129, 0.1)' }}
+            title={lang === 'hi' ? 'किसान मित्र एआई से सहायता लें' : 'Ask Kisan Mitra AI for Help'}
+          >
+            <img src="/mascot-farmer-boy.jpg" style={{ width: '22px', height: '22px', borderRadius: '50%', objectFit: 'cover' }} alt="Mascot" />
+            <span>{lang === 'hi' ? 'किसान मित्र (AI)' : 'Kisan Mitra (AI)'}</span>
+          </button>
+
           <button
             onClick={() => setIsUploadOpen(true)}
             className="btn btn-primary btn-lg"
