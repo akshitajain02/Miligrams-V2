@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { 
   Sprout, Package, Plus, RefreshCw, Layers, ShieldCheck, User, 
   FileText, CheckCircle2, X, Mic, MicOff, Volume2, Calendar, Scale, 
-  AlertTriangle, FastForward, Building2, ShoppingBag, Sparkles, Award, Shield, Lock
+  AlertTriangle, FastForward, Building2, ShoppingBag, Sparkles, Award, Shield, Lock, BookOpen
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import KisanReceiptModal from '../components/KisanReceiptModal';
 import CropHistoryModal from '../components/CropHistoryModal';
+import PortalTutorialModal from '../components/PortalTutorialModal';
 import { startVoiceRecognition, parseSpokenCrop, speakText } from '../utils/speechUtils';
 import { translations } from '../utils/translations';
 
@@ -22,12 +23,24 @@ export default function FarmerPortal({ lang = 'hi' }) {
   const [loading, setLoading] = useState(true);
 
   // Modals state
+  const [isTutorialOpen, setIsTutorialOpen] = useState(false);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isKycModalOpen, setIsKycModalOpen] = useState(false);
   const [selectedCrop, setSelectedCrop] = useState(null);
   const [mintedBlock, setMintedBlock] = useState(null);
+
+  useEffect(() => {
+    try {
+      const seen = localStorage.getItem('miligrams_tour_farmer_seen');
+      if (!seen) {
+        setIsTutorialOpen(true);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
 
   // KYC submission form state
   const [kycForm, setKycForm] = useState({
@@ -329,6 +342,17 @@ export default function FarmerPortal({ lang = 'hi' }) {
               ))}
             </select>
           </div>
+
+          {/* Interactive Tutorial Button */}
+          <button
+            onClick={() => setIsTutorialOpen(true)}
+            className="btn btn-secondary"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', borderColor: 'rgba(16, 185, 129, 0.4)', color: '#34d399' }}
+            title={lang === 'hi' ? 'किसान पोर्टल मार्गदर्शिका देखें' : 'View Farmer Portal Tutorial'}
+          >
+            <BookOpen size={16} />
+            <span>{lang === 'hi' ? '📖 ट्यूटोरियल' : '📖 Tour'}</span>
+          </button>
 
           <button
             onClick={() => setIsUploadOpen(true)}
@@ -1104,6 +1128,14 @@ export default function FarmerPortal({ lang = 'hi' }) {
           </div>
         </div>
       )}
+
+      {/* Interactive Role Walkthrough Tutorial Modal */}
+      <PortalTutorialModal
+        role="farmer"
+        lang={lang}
+        isOpen={isTutorialOpen}
+        onClose={() => setIsTutorialOpen(false)}
+      />
     </div>
   );
 }

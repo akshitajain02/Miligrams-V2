@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Sidebar from './components/Sidebar';
 import InteractiveCanvas3D from './components/InteractiveCanvas3D';
+import FrontPage from './pages/FrontPage';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import FarmerPortal from './pages/FarmerPortal';
@@ -44,8 +45,10 @@ export default function App() {
           {/* Main Viewport */}
           <div className="app-main-viewport">
             <Routes>
-              {/* Default Entry Point: Role-Based Authentication & Gateway */}
-              <Route path="/" element={<LoginPage lang={lang} />} />
+              {/* Step 1: Front Nature Web Page & Informational Story */}
+              <Route path="/" element={<FrontPage lang={lang} setLang={setLang} theme={theme} toggleTheme={toggleTheme} />} />
+              
+              {/* Step 2: Role-Based Authentication & Gateway */}
               <Route path="/login" element={<LoginPage lang={lang} />} />
               
               {/* System Overview & Interactive 3D Ecosystem */}

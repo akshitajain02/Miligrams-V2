@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { 
   ShoppingBag, CheckCircle2, Shield, RefreshCw, Layers, 
   DollarSign, UserCheck, Tag, Clock, ArrowRight, Sparkles, 
-  Building2, Star, Award, MessageSquare, ThumbsUp, X, User 
+  Building2, Star, Award, MessageSquare, ThumbsUp, X, User, BookOpen 
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import PortalTutorialModal from '../components/PortalTutorialModal';
 import { soundFX } from '../utils/audioFX';
 
 export default function BuyerPortal({ lang = 'hi' }) {
@@ -19,6 +20,18 @@ export default function BuyerPortal({ lang = 'hi' }) {
   const [loading, setLoading] = useState(true);
   const [purchasingCropId, setPurchasingCropId] = useState(null);
   const [purchaseReceipt, setPurchaseReceipt] = useState(null);
+  const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      const seen = localStorage.getItem('miligrams_tour_buyer_seen');
+      if (!seen) {
+        setIsTutorialOpen(true);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
 
   // Farmer Review Modal State
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
@@ -198,6 +211,17 @@ export default function BuyerPortal({ lang = 'hi' }) {
               ))}
             </select>
           </div>
+
+          {/* Interactive Tutorial Button */}
+          <button 
+            onClick={() => setIsTutorialOpen(true)} 
+            className="btn btn-secondary btn-sm" 
+            style={{ borderColor: 'rgba(6, 182, 212, 0.4)', color: '#22d3ee' }}
+            title={lang === 'hi' ? 'व्यापारी मंडी मार्गदर्शिका देखें' : 'View Buyer Marketplace Tutorial'}
+          >
+            <BookOpen size={14} />
+            <span>{lang === 'hi' ? '📖 ट्यूटोरियल' : '📖 Tour'}</span>
+          </button>
 
           <button onClick={fetchData} className="btn btn-secondary btn-sm" title="Refresh">
             <RefreshCw size={14} className={loading ? 'spin-slow' : ''} />
@@ -610,6 +634,14 @@ export default function BuyerPortal({ lang = 'hi' }) {
           </div>
         </div>
       )}
+
+      {/* Interactive Role Walkthrough Tutorial Modal */}
+      <PortalTutorialModal
+        role="buyer"
+        lang={lang}
+        isOpen={isTutorialOpen}
+        onClose={() => setIsTutorialOpen(false)}
+      />
     </div>
   );
 }

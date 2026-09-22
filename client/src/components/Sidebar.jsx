@@ -58,15 +58,9 @@ export default function Sidebar({ lang = 'hi', setLang, theme = 'dark', toggleTh
         {/* Top Brand Emblem */}
         <div 
           className="sidebar-brand" 
-          onClick={() => {
-            if (isAuthenticated && currentRole) {
-              navigate(`/${currentRole}`);
-            } else {
-              navigate('/login');
-            }
-          }} 
+          onClick={() => navigate('/')} 
           style={{ cursor: 'pointer' }}
-          title="Miligrams Home"
+          title="Miligrams Home & Story"
         >
           <div className="sidebar-brand-icon">
             <Sprout size={24} />
@@ -154,11 +148,20 @@ export default function Sidebar({ lang = 'hi', setLang, theme = 'dark', toggleTh
           </div>
 
           <NavLink
+            to="/"
+            end
+            className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active-farmer' : ''}`}
+          >
+            <span className="sidebar-nav-icon"><Globe size={17} /></span>
+            <span>{lang === 'hi' ? 'मुख्य पृष्ठ (Front Page)' : 'Home & Story'}</span>
+          </NavLink>
+
+          <NavLink
             to="/overview"
             className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active-farmer' : ''}`}
           >
             <span className="sidebar-nav-icon"><Layers size={17} /></span>
-            <span>{lang === 'hi' ? 'सिस्टम ओवरव्यू' : 'System Overview'}</span>
+            <span>{lang === 'hi' ? 'सिस्टम ओवरव्यू' : '3D Ecosystem'}</span>
           </NavLink>
 
           <NavLink
@@ -196,7 +199,7 @@ export default function Sidebar({ lang = 'hi', setLang, theme = 'dark', toggleTh
           {/* Dedicated Login Link */}
           <NavLink
             to="/login"
-            className={() => `sidebar-nav-item ${(location.pathname === '/' || location.pathname === '/login') ? 'active-farmer' : ''}`}
+            className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active-farmer' : ''}`}
             style={{ marginTop: 'auto', borderTop: '1px solid var(--border)' }}
           >
             <span className="sidebar-nav-icon"><LogIn size={16} /></span>

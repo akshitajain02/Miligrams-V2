@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Package, Building2, CheckCircle2, Shield, RefreshCw, Layers, ArrowRight, MapPin, Cpu, Database } from 'lucide-react';
+import { Package, Building2, CheckCircle2, Shield, RefreshCw, Layers, ArrowRight, MapPin, Cpu, Database, BookOpen } from 'lucide-react';
 import CropHistoryModal from '../components/CropHistoryModal';
+import PortalTutorialModal from '../components/PortalTutorialModal';
 import { translations } from '../utils/translations';
 
 export default function WarehousePortal({ lang = 'hi' }) {
@@ -16,6 +17,18 @@ export default function WarehousePortal({ lang = 'hi' }) {
 
   const [activeCropForModal, setActiveCropForModal] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      const seen = localStorage.getItem('miligrams_tour_warehouse_seen');
+      if (!seen) {
+        setIsTutorialOpen(true);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
 
   const fetchData = async () => {
     setLoading(true);
@@ -99,6 +112,16 @@ export default function WarehousePortal({ lang = 'hi' }) {
         </div>
 
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+          <button 
+            onClick={() => setIsTutorialOpen(true)} 
+            className="btn btn-secondary btn-sm" 
+            style={{ borderColor: 'rgba(245, 158, 11, 0.4)', color: '#fbbf24' }}
+            title={lang === 'hi' ? 'गोदाम मार्गदर्शिका देखें' : 'View Warehouse Tutorial'}
+          >
+            <BookOpen size={14} />
+            <span>{lang === 'hi' ? '📖 ट्यूटोरियल' : '📖 Tour'}</span>
+          </button>
+
           <button onClick={fetchData} className="btn btn-secondary btn-sm" title="Refresh">
             <RefreshCw size={14} className={loading ? 'spin-slow' : ''} />
             <span>{t.refresh}</span>
@@ -335,6 +358,14 @@ export default function WarehousePortal({ lang = 'hi' }) {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         lang={lang}
+      />
+
+      {/* Interactive Role Walkthrough Tutorial Modal */}
+      <PortalTutorialModal
+        role="warehouse"
+        lang={lang}
+        isOpen={isTutorialOpen}
+        onClose={() => setIsTutorialOpen(false)}
       />
     </div>
   );

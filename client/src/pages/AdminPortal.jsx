@@ -3,9 +3,10 @@ import {
   ShieldCheck, AlertOctagon, RefreshCw, Search, ShieldAlert, 
   RotateCcw, UserPlus, Building2, ShoppingBag, CheckCircle2, 
   AlertCircle, Clock, Play, Cpu, Database, Link2, FileText, 
-  X, AlertTriangle, Star, Check, Shield, Award, User
+  X, AlertTriangle, Star, Check, Shield, Award, User, BookOpen
 } from 'lucide-react';
 import BlockCard from '../components/BlockCard';
+import PortalTutorialModal from '../components/PortalTutorialModal';
 
 export default function AdminPortal({ lang = 'hi' }) {
   const [activeTab, setActiveTab] = useState('kyc'); // 'kyc' | 'ledger' | 'aging' | 'participants' | 'register'
@@ -14,6 +15,18 @@ export default function AdminPortal({ lang = 'hi' }) {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [tamperStatus, setTamperStatus] = useState(null);
+  const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      const seen = localStorage.getItem('miligrams_tour_admin_seen');
+      if (!seen) {
+        setIsTutorialOpen(true);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
 
   // KYC Verification Hub states
   const [kycFilter, setKycFilter] = useState('all'); // 'all' | 'pending' | 'verified' | 'rejected'
@@ -228,10 +241,22 @@ export default function AdminPortal({ lang = 'hi' }) {
           </p>
         </div>
 
-        <button onClick={fetchLedgerData} className="btn btn-secondary btn-sm" title="Refresh">
-          <RefreshCw size={14} className={loading ? 'spin-slow' : ''} />
-          <span>{lang === 'hi' ? 'रिफ्रेश' : 'Refresh'}</span>
-        </button>
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+          <button 
+            onClick={() => setIsTutorialOpen(true)} 
+            className="btn btn-secondary btn-sm" 
+            style={{ borderColor: 'rgba(139, 92, 246, 0.4)', color: '#c084fc' }}
+            title={lang === 'hi' ? 'एडमिन लेजर मार्गदर्शिका देखें' : 'View Admin Ledger Tutorial'}
+          >
+            <BookOpen size={14} />
+            <span>{lang === 'hi' ? '📖 ट्यूटोरियल' : '📖 Tour'}</span>
+          </button>
+
+          <button onClick={fetchLedgerData} className="btn btn-secondary btn-sm" title="Refresh">
+            <RefreshCw size={14} className={loading ? 'spin-slow' : ''} />
+            <span>{lang === 'hi' ? 'रिफ्रेश' : 'Refresh'}</span>
+          </button>
+        </div>
       </div>
 
       {/* Chain Verification Status Banner */}
@@ -970,6 +995,14 @@ export default function AdminPortal({ lang = 'hi' }) {
           </div>
         </div>
       )}
+
+      {/* Interactive Role Walkthrough Tutorial Modal */}
+      <PortalTutorialModal
+        role="admin"
+        lang={lang}
+        isOpen={isTutorialOpen}
+        onClose={() => setIsTutorialOpen(false)}
+      />
     </div>
   );
 }
