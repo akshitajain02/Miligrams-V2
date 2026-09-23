@@ -102,7 +102,7 @@ export default function RoleSelectModal({ isOpen, onClose, currentRole, lang = '
                   padding: '1.4rem',
                   cursor: 'pointer',
                   borderColor: isCurrent ? r.color : 'var(--border)',
-                  background: isCurrent ? `${r.color}15` : 'rgba(16, 23, 38, 0.85)',
+                  background: isCurrent ? `${r.color}15` : 'var(--surface-alt)',
                   boxShadow: isCurrent ? `0 0 25px ${r.color}25` : undefined
                 }}
               >
@@ -115,16 +115,16 @@ export default function RoleSelectModal({ isOpen, onClose, currentRole, lang = '
                   </span>
                 </div>
 
-                <h4 style={{ fontSize: '1.12rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.35rem' }}>
+                <h4 style={{ fontSize: '1.12rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
                   {lang === 'hi' ? r.titleHi : r.titleEn}
                 </h4>
 
-                <p style={{ fontSize: '0.84rem', color: '#94a3b8', lineHeight: 1.5, marginBottom: '1.15rem' }}>
+                <p style={{ fontSize: '0.84rem', color: 'var(--text-muted)', lineHeight: 1.5, marginBottom: '1.15rem' }}>
                   {lang === 'hi' ? r.descHi : r.descEn}
                 </p>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '0.75rem' }}>
-                  <span style={{ fontSize: '0.76rem', color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border)', paddingTop: '0.75rem' }}>
+                  <span style={{ fontSize: '0.76rem', color: 'var(--text-light)', fontFamily: 'JetBrains Mono, monospace' }}>
                     {isCurrent ? '● CURRENT' : 'READY'}
                   </span>
                   <span style={{ fontSize: '0.82rem', fontWeight: 700, color: r.color, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>

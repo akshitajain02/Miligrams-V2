@@ -132,10 +132,10 @@ export default function Interactive3DQuest({ lang = 'hi' }) {
             <Zap size={12} color="#f59e0b" />
             <span>INTERACTIVE 3D PROVENANCE QUEST</span>
           </span>
-          <h2 style={{ fontSize: '1.65rem', color: '#ffffff', marginTop: '0.25rem' }}>
+          <h2 style={{ fontSize: '1.65rem', color: 'var(--text-main)', marginTop: '0.25rem' }}>
             {lang === 'hi' ? '3D कृषि ब्लॉकचेन क्वेस्ट (Live Interactive Quest)' : 'Autonomous 3D Provenance Quest'}
           </h2>
-          <p style={{ color: '#94a3b8', fontSize: '0.84rem', marginTop: '0.2rem', maxWidth: '580px' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.84rem', marginTop: '0.2rem', maxWidth: '580px' }}>
             {lang === 'hi'
               ? 'प्रत्येक चरण पर क्लिक करें और देखें कि कैसे खेत की उपज वास्तविक समय में ब्लॉकचेन पर रूपांतरित होती है।'
               : 'Interactive step-by-step 3D journey simulating harvest, silo transition, 15-day aging, and ledger sealing.'}
@@ -267,17 +267,17 @@ export default function Interactive3DQuest({ lang = 'hi' }) {
               <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem', border: '2px solid #10b981' }}>
                 <Trophy size={32} />
               </div>
-              <h3 style={{ fontSize: '1.6rem', color: '#ffffff', marginBottom: '0.35rem' }}>
+              <h3 style={{ fontSize: '1.6rem', color: 'var(--text-main)', marginBottom: '0.35rem' }}>
                 {lang === 'hi' ? 'क्वेस्ट सफल! ब्लॉकचेन लेजर 100% सीलबंद' : 'Quest Complete! Lifecycle 100% Cryptographically Sealed'}
               </h3>
-              <p style={{ color: '#94a3b8', fontSize: '0.88rem', maxWidth: '520px', margin: '0 auto 1.5rem' }}>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', maxWidth: '520px', margin: '0 auto 1.5rem' }}>
                 {lang === 'hi'
                   ? 'बीज से लेकर थोक मंडी तक प्रत्येक लेनदेन SHA-256 ब्लॉकचेन पर दर्ज हो चुका है। शून्य बिचौलिया, शून्य छेड़छाड़।'
                   : 'From farm soil to institutional trade, the crop journey is permanently engraved with zero middleman interference.'}
               </p>
 
-              <div style={{ background: 'rgba(0, 0, 0, 0.4)', padding: '0.85rem', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.08)', display: 'inline-block', marginBottom: '1.5rem' }}>
-                <span style={{ fontSize: '0.72rem', color: '#64748b', display: 'block', textTransform: 'uppercase', fontWeight: 800 }}>MINTED MERKLE PROOF:</span>
+              <div style={{ background: 'var(--surface-alt)', padding: '0.85rem', borderRadius: '8px', border: '1px solid var(--border)', display: 'inline-block', marginBottom: '1.5rem' }}>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-light)', display: 'block', textTransform: 'uppercase', fontWeight: 800 }}>MINTED MERKLE PROOF:</span>
                 <span className="font-mono" style={{ color: '#38bdf8', fontSize: '0.78rem' }}>{simulatedHash}</span>
               </div>
 
@@ -299,24 +299,24 @@ export default function Interactive3DQuest({ lang = 'hi' }) {
                     <span className="badge" style={{ background: `${activeStepData.color}15`, color: activeStepData.color, borderColor: `${activeStepData.color}35` }}>
                       {activeStepData.badge}
                     </span>
-                    <h3 style={{ fontSize: '1.35rem', color: '#ffffff', margin: '0.2rem 0 0' }}>
+                    <h3 style={{ fontSize: '1.35rem', color: 'var(--text-main)', margin: '0.2rem 0 0' }}>
                       {activeStepData.title}
                     </h3>
                   </div>
                 </div>
 
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: '#64748b', background: 'rgba(255, 255, 255, 0.04)', padding: '0.3rem 0.65rem', borderRadius: '6px' }}>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: 'var(--text-light)', background: 'var(--surface-alt)', padding: '0.3rem 0.65rem', borderRadius: '6px' }}>
                   Step {currentStep + 1} / {questSteps.length}
                 </span>
               </div>
 
-              <p style={{ color: '#94a3b8', fontSize: '0.88rem', lineHeight: 1.55, marginBottom: '1.5rem' }}>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', lineHeight: 1.55, marginBottom: '1.5rem' }}>
                 {activeStepData.desc}
               </p>
 
               {/* Dynamic Hash Stream Bar */}
-              <div style={{ background: 'rgba(0, 0, 0, 0.4)', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.05)', marginBottom: '1.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 800, textTransform: 'uppercase' }}>
+              <div style={{ background: 'var(--surface-alt)', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--border)', marginBottom: '1.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-light)', fontWeight: 800, textTransform: 'uppercase' }}>
                   SHA-256 State Hash:
                 </span>
                 <span className="font-mono" style={{ color: '#38bdf8', fontSize: '0.74rem' }}>

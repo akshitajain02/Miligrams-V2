@@ -49,21 +49,21 @@ export default function CropHistoryModal({ crop, isOpen, onClose }) {
 
         <div className="modal-body">
           {/* Crop quick summary */}
-          <div style={{ background: 'rgba(11, 16, 26, 0.8)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.15rem', marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', gap: '1.5rem', fontSize: '0.88rem' }}>
+          <div style={{ background: 'var(--surface-alt)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.15rem', marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', gap: '1.5rem', fontSize: '0.88rem' }}>
             <div>
-              <span style={{ color: '#64748b', display: 'block', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase' }}>CROP ID</span>
+              <span style={{ color: 'var(--text-light)', display: 'block', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase' }}>CROP ID</span>
               <span className="font-mono" style={{ fontWeight: 600, color: '#38bdf8' }}>{crop._id}</span>
             </div>
             <div>
-              <span style={{ color: '#64748b', display: 'block', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase' }}>QUANTITY</span>
-              <span style={{ fontWeight: 700, color: '#ffffff' }}>{crop.quantity} kg</span>
+              <span style={{ color: 'var(--text-light)', display: 'block', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase' }}>QUANTITY</span>
+              <span style={{ fontWeight: 700, color: 'var(--text-main)' }}>{crop.quantity} kg</span>
             </div>
             <div>
-              <span style={{ color: '#64748b', display: 'block', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase' }}>CURRENT STAGE</span>
+              <span style={{ color: 'var(--text-light)', display: 'block', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase' }}>CURRENT STAGE</span>
               <span className={`badge badge-${crop.currentStage}`}>{crop.currentStage}</span>
             </div>
             <div>
-              <span style={{ color: '#64748b', display: 'block', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase' }}>ASSOCIATED BLOCKS</span>
+              <span style={{ color: 'var(--text-light)', display: 'block', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase' }}>ASSOCIATED BLOCKS</span>
               <span style={{ fontWeight: 700, color: '#10b981', fontFamily: 'JetBrains Mono, monospace' }}>{history.length} Chain Blocks</span>
             </div>
           </div>

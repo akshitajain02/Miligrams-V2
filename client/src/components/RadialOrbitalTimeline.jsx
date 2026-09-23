@@ -302,27 +302,27 @@ export default function RadialOrbitalTimeline({ lang = 'hi' }) {
                       >
                         {item.badgeText}
                       </span>
-                      <span style={{ fontSize: '0.74rem', color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>
+                      <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', fontFamily: 'JetBrains Mono, monospace' }}>
                         {item.date}
                       </span>
                     </div>
 
-                    <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', margin: '0.55rem 0 0.35rem' }}>
+                    <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-main)', margin: '0.55rem 0 0.35rem' }}>
                       {item.title}
                     </h4>
 
-                    <p style={{ fontSize: '0.82rem', color: '#94a3b8', lineHeight: 1.5, marginBottom: '1rem' }}>
+                    <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.5, marginBottom: '1rem' }}>
                       {item.content}
                     </p>
 
                     {/* Energy Meter */}
-                    <div style={{ marginBottom: '1rem', paddingTop: '0.65rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', color: '#94a3b8', fontWeight: 700, marginBottom: '0.35rem' }}>
+                    <div style={{ marginBottom: '1rem', paddingTop: '0.65rem', borderTop: '1px solid var(--border)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: '0.35rem' }}>
                         <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                           <Zap size={12} color="#f59e0b" />
                           <span>{lang === 'hi' ? 'नोड ऊर्जा व अखंडता' : 'Node Energy & Integrity'}</span>
                         </span>
-                        <span style={{ fontFamily: 'JetBrains Mono, monospace', color: '#ffffff' }}>{item.energy}%</span>
+                        <span style={{ fontFamily: 'JetBrains Mono, monospace', color: 'var(--text-main)' }}>{item.energy}%</span>
                       </div>
                       <div style={{ background: 'rgba(255, 255, 255, 0.08)', height: '6px', borderRadius: '3px', overflow: 'hidden' }}>
                         <div

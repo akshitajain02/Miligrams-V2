@@ -225,16 +225,16 @@ export default function AdminPortal({ lang = 'hi' }) {
   return (
     <div>
       {/* Header Banner */}
-      <div className="glass-panel" style={{ padding: '2rem 2.25rem', marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem', background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(14, 20, 34, 0.8) 100%)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
+      <div className="glass-panel" style={{ padding: '2rem 2.25rem', marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem', background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, var(--surface-alt) 100%)', borderColor: 'rgba(139, 92, 246, 0.3)' }}>
         <div>
           <span className="badge" style={{ background: 'rgba(139, 92, 246, 0.15)', color: '#c084fc', borderColor: 'rgba(139, 92, 246, 0.3)', marginBottom: '0.65rem' }}>
             <ShieldCheck size={13} />
             <span>CRYPTOGRAPHIC LEDGER GOVERNANCE</span>
           </span>
-          <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em', margin: '0.35rem 0' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em', margin: '0.35rem 0' }}>
             {lang === 'hi' ? 'एडमिन व ब्लॉकचेन लेजर पोर्टल' : 'Admin & Blockchain Ledger Explorer'}
           </h2>
-          <p style={{ color: '#94a3b8', fontSize: '0.94rem', maxWidth: '600px' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.94rem', maxWidth: '600px' }}>
             {lang === 'hi'
               ? 'क्रिप्टोग्राफिक SHA-256 ब्लॉकचेन सत्यापन, 15-दिन उम्र सत्यापन चक्र, और छेड़छाड़-रोधी परीक्षण।'
               : 'Audit cryptographic SHA-256 blocks, trigger 15-day crop aging checks, and test tamper detection.'}
@@ -285,22 +285,22 @@ export default function AdminPortal({ lang = 'hi' }) {
             </div>
           )}
           <div>
-            <h4 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#ffffff' }}>
+            <h4 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)' }}>
               {verification.isValid
                 ? (lang === 'hi' ? 'ब्लॉकचेन अखंडता: 100% सत्यापित व सुरक्षित' : 'Blockchain Integrity: 100% Cryptographically Intact')
                 : (lang === 'hi' ? 'गंभीर चेतावनी: लेजर में छेड़छाड़ पकड़ी गई!' : 'Critical Alert: Cryptographic Tampering Detected!')}
             </h4>
-            <p style={{ fontSize: '0.86rem', color: '#94a3b8', marginTop: '0.2rem' }}>
+            <p style={{ fontSize: '0.86rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
               {verification.summary}
             </p>
           </div>
         </div>
 
         <div style={{ textAlign: 'right', flexShrink: 0 }}>
-          <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: '#64748b', fontWeight: 800, letterSpacing: '0.05em' }}>
+          <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-light)', fontWeight: 800, letterSpacing: '0.05em' }}>
             Mined Blocks
           </span>
-          <div style={{ fontSize: '1.85rem', fontWeight: 900, color: '#ffffff', fontFamily: 'JetBrains Mono, monospace' }}>
+          <div style={{ fontSize: '1.85rem', fontWeight: 900, color: 'var(--text-main)', fontFamily: 'JetBrains Mono, monospace' }}>
             #{blocks.length}
           </div>
         </div>
@@ -552,11 +552,11 @@ export default function AdminPortal({ lang = 'hi' }) {
           <div className="glass-panel" style={{ padding: '1.4rem 1.75rem', marginBottom: '2rem', borderStyle: 'dashed', borderColor: 'rgba(255, 255, 255, 0.15)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.25rem' }}>
               <div>
-                <strong style={{ fontSize: '1rem', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                <strong style={{ fontSize: '1rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
                   <ShieldAlert size={18} color="#f59e0b" />
                   <span>{lang === 'hi' ? 'शैक्षणिक डेमो: क्रिप्टोग्राफिक छेड़छाड़-रोधी परीक्षण' : 'Interactive Sandbox: SHA-256 Tamper Detection'}</span>
                 </strong>
-                <p style={{ fontSize: '0.84rem', color: '#94a3b8', marginTop: '0.25rem' }}>
+                <p style={{ fontSize: '0.84rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
                   {lang === 'hi'
                     ? 'ब्लॉक डेटा बदलने से मर्कल रूट और SHA-256 हैश टूट जाता है, जिससे सत्यापन तुरंत विफल हो जाता है।'
                     : 'Modifying a single byte invalidates the Merkle root and breaks hash linkage immediately.'}
@@ -590,17 +590,17 @@ export default function AdminPortal({ lang = 'hi' }) {
 
           {/* Search Filter */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.75rem', gap: '1rem', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', background: 'rgba(11, 16, 26, 0.8)', border: '1px solid var(--border-light)', borderRadius: '10px', padding: '0.6rem 1rem', flex: 1, maxWidth: '440px' }}>
-              <Search size={16} color="#94a3b8" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', background: 'var(--surface-alt)', border: '1px solid var(--border-light)', borderRadius: '10px', padding: '0.6rem 1rem', flex: 1, maxWidth: '440px' }}>
+              <Search size={16} color="var(--text-muted)" />
               <input
                 type="text"
                 placeholder={lang === 'hi' ? 'ब्लॉक #, SHA-256 हैश, या विवरण से खोजें...' : 'Search block #, hash, or payload details...'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ border: 'none', background: 'transparent', width: '100%', outline: 'none', fontSize: '0.88rem', color: '#ffffff' }}
+                style={{ border: 'none', background: 'transparent', width: '100%', outline: 'none', fontSize: '0.88rem', color: 'var(--text-main)' }}
               />
             </div>
-            <div style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
               {lang === 'hi' ? `कुल ${blocks.length} में से ${filteredBlocks.length} ब्लॉक` : `Showing ${filteredBlocks.length} of ${blocks.length} Blocks`}
             </div>
           </div>
@@ -619,11 +619,11 @@ export default function AdminPortal({ lang = 'hi' }) {
         <div className="glass-panel" style={{ padding: '2rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
             <div>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <Clock size={20} color="#f59e0b" />
                 <span>15-दिन फसल उम्र सत्यापन चक्र (Crop Aging Engine)</span>
               </h3>
-              <p style={{ fontSize: '0.86rem', color: '#94a3b8', marginTop: '0.35rem', maxWidth: '650px' }}>
+              <p style={{ fontSize: '0.86rem', color: 'var(--text-muted)', marginTop: '0.35rem', maxWidth: '650px' }}>
                 15 दिन तक न बिकने वाली फसलों को स्वतः 'aged-relisted' बनाकर 20% मूल्य छूट व ब्लॉकचेन री-वेरिफिकेशन दर्ज करता है। 30 दिन बाद 'unsellable' मार्क करता है।
               </p>
             </div>
@@ -640,16 +640,16 @@ export default function AdminPortal({ lang = 'hi' }) {
           </div>
 
           {agingReport && (
-            <div style={{ background: 'rgba(11, 16, 26, 0.7)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.4rem', marginBottom: '1.75rem' }}>
+            <div style={{ background: 'var(--surface-alt)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.4rem', marginBottom: '1.75rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', color: '#34d399', fontWeight: 700 }}>
                 <CheckCircle2 size={18} />
                 <span>{agingReport.message}</span>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', fontSize: '0.88rem' }}>
-                <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '1rem', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                  <span style={{ color: '#64748b', fontSize: '0.74rem', display: 'block', textTransform: 'uppercase', fontWeight: 700 }}>जांची गई फसलें</span>
-                  <strong style={{ fontSize: '1.5rem', color: '#ffffff', fontFamily: 'JetBrains Mono, monospace' }}>{agingReport.totalChecked}</strong>
+                <div style={{ background: 'var(--surface)', padding: '1rem', borderRadius: '10px', border: '1px solid var(--border)' }}>
+                  <span style={{ color: 'var(--text-light)', fontSize: '0.74rem', display: 'block', textTransform: 'uppercase', fontWeight: 700 }}>जांची गई फसलें</span>
+                  <strong style={{ fontSize: '1.5rem', color: 'var(--text-main)', fontFamily: 'JetBrains Mono, monospace' }}>{agingReport.totalChecked}</strong>
                 </div>
 
                 <div style={{ background: 'rgba(245, 158, 11, 0.1)', padding: '1rem', borderRadius: '10px', border: '1px solid rgba(245, 158, 11, 0.3)' }}>
@@ -675,7 +675,7 @@ export default function AdminPortal({ lang = 'hi' }) {
       {activeTab === 'participants' && (
         <div className="glass-panel" style={{ padding: '1.75rem' }}>
           <div style={{ marginBottom: '1.5rem' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)' }}>
               पंजीकृत नेटवर्क भागीदार (Registered Network Actors)
             </h3>
           </div>
@@ -683,7 +683,7 @@ export default function AdminPortal({ lang = 'hi' }) {
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.88rem' }}>
               <thead>
-                <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)', color: '#64748b', textTransform: 'uppercase', fontSize: '0.72rem', letterSpacing: '0.05em' }}>
+                <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-light)', textTransform: 'uppercase', fontSize: '0.72rem', letterSpacing: '0.05em' }}>
                   <th style={{ padding: '0.75rem 1rem' }}>भूमिका (Role)</th>
                   <th style={{ padding: '0.75rem 1rem' }}>नाम (Name)</th>
                   <th style={{ padding: '0.75rem 1rem' }}>यूनिक पहचान (ID)</th>
@@ -692,27 +692,27 @@ export default function AdminPortal({ lang = 'hi' }) {
               </thead>
               <tbody>
                 {farmersList.map(f => (
-                  <tr key={f.uniqueId} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                  <tr key={f.uniqueId} style={{ borderBottom: '1px solid var(--border)' }}>
                     <td style={{ padding: '1rem' }}><span className="badge badge-farm">किसान (Farmer)</span></td>
-                    <td style={{ padding: '1rem' }}><strong style={{ color: '#ffffff' }}>{f.name}</strong></td>
+                    <td style={{ padding: '1rem' }}><strong style={{ color: 'var(--text-main)' }}>{f.name}</strong></td>
                     <td style={{ padding: '1rem' }}><span className="font-mono" style={{ color: '#38bdf8' }}>{f.uniqueId}</span></td>
-                    <td style={{ padding: '1rem', color: '#94a3b8' }}>{f.location}</td>
+                    <td style={{ padding: '1rem', color: 'var(--text-muted)' }}>{f.location}</td>
                   </tr>
                 ))}
                 {warehousesList.map(w => (
-                  <tr key={w.warehouseId} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                  <tr key={w.warehouseId} style={{ borderBottom: '1px solid var(--border)' }}>
                     <td style={{ padding: '1rem' }}><span className="badge badge-warehouse">गोदाम (Warehouse)</span></td>
-                    <td style={{ padding: '1rem' }}><strong style={{ color: '#ffffff' }}>{w.warehouseId}</strong></td>
+                    <td style={{ padding: '1rem' }}><strong style={{ color: 'var(--text-main)' }}>{w.warehouseId}</strong></td>
                     <td style={{ padding: '1rem' }}><span className="font-mono" style={{ color: '#fbbf24' }}>क्षमता: {w.capacity?.toLocaleString()} kg</span></td>
-                    <td style={{ padding: '1rem', color: '#94a3b8' }}>{w.location}</td>
+                    <td style={{ padding: '1rem', color: 'var(--text-muted)' }}>{w.location}</td>
                   </tr>
                 ))}
                 {buyersList.map(b => (
-                  <tr key={b.uniqueId} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                  <tr key={b.uniqueId} style={{ borderBottom: '1px solid var(--border)' }}>
                     <td style={{ padding: '1rem' }}><span className="badge badge-sold">व्यापारी (Buyer)</span></td>
-                    <td style={{ padding: '1rem' }}><strong style={{ color: '#ffffff' }}>{b.name}</strong></td>
+                    <td style={{ padding: '1rem' }}><strong style={{ color: 'var(--text-main)' }}>{b.name}</strong></td>
                     <td style={{ padding: '1rem' }}><span className="font-mono" style={{ color: '#34d399' }}>{b.uniqueId}</span></td>
-                    <td style={{ padding: '1rem', color: '#94a3b8' }}>{b.organization}</td>
+                    <td style={{ padding: '1rem', color: 'var(--text-muted)' }}>{b.organization}</td>
                   </tr>
                 ))}
               </tbody>
@@ -724,7 +724,7 @@ export default function AdminPortal({ lang = 'hi' }) {
       {/* Tab 4: Register New Participant */}
       {activeTab === 'register' && (
         <div className="glass-panel" style={{ padding: '2rem', maxWidth: '680px' }}>
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', marginBottom: '1.25rem' }}>
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '1.25rem' }}>
             नया भागीदार पंजीकृत करें (Register Participant)
           </h3>
 

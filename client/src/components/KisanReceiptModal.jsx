@@ -62,10 +62,10 @@ export default function KisanReceiptModal({ crop, block, isOpen, onClose, lang =
               <div className="receipt-gov-seal">
                 <Sprout size={28} />
               </div>
-              <h2 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em' }}>
+              <h2 style={{ fontSize: '1.45rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
                 {lang === 'hi' ? 'मिलीग्राम्स डिजिटल किसान प्रमाण पत्र' : 'Miligrams Digital Farmer Certificate'}
               </h2>
-              <p style={{ fontSize: '0.82rem', color: '#94a3b8', marginTop: '0.2rem' }}>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
                 {lang === 'hi' ? 'भारत सरकार समर्थित स्वायत्त ब्लॉकचेन लेजर पर प्रमाणित' : 'Cryptographically Verified on Sovereign SHA-256 Ledger'}
               </p>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.5rem', background: 'rgba(16, 185, 129, 0.15)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.35)', padding: '0.25rem 0.75rem', borderRadius: '9999px', fontSize: '0.74rem', fontWeight: 800 }}>
@@ -75,18 +75,18 @@ export default function KisanReceiptModal({ crop, block, isOpen, onClose, lang =
             </div>
 
             {/* Core Certificate Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem', marginBottom: '1.5rem', background: 'rgba(11, 16, 26, 0.6)', padding: '1.25rem', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem', marginBottom: '1.5rem', background: 'var(--surface-alt)', padding: '1.25rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
               <div>
-                <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-light)', fontWeight: 700, textTransform: 'uppercase' }}>
                   {lang === 'hi' ? 'फसल का प्रकार' : 'Crop Type'}
                 </span>
-                <p style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', marginTop: '0.15rem' }}>
+                <p style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-main)', marginTop: '0.15rem' }}>
                   {crop.cropType}
                 </p>
               </div>
 
               <div>
-                <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-light)', fontWeight: 700, textTransform: 'uppercase' }}>
                   {lang === 'hi' ? 'कुल वजन' : 'Total Quantity'}
                 </span>
                 <p style={{ fontSize: '1.1rem', fontWeight: 800, color: '#10b981', fontFamily: 'JetBrains Mono, monospace', marginTop: '0.15rem' }}>
@@ -95,25 +95,25 @@ export default function KisanReceiptModal({ crop, block, isOpen, onClose, lang =
               </div>
 
               <div>
-                <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-light)', fontWeight: 700, textTransform: 'uppercase' }}>
                   {lang === 'hi' ? 'किसान का नाम व पहचान' : 'Farmer Identity'}
                 </span>
-                <p style={{ fontSize: '0.92rem', fontWeight: 700, color: '#ffffff', marginTop: '0.15rem' }}>
+                <p style={{ fontSize: '0.92rem', fontWeight: 700, color: 'var(--text-main)', marginTop: '0.15rem' }}>
                   {crop.farmerName || 'Kisan'} ({crop.farmerId})
                 </p>
               </div>
 
               <div>
-                <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-light)', fontWeight: 700, textTransform: 'uppercase' }}>
                   {lang === 'hi' ? 'कटाई की तिथि' : 'Harvest Date'}
                 </span>
-                <p style={{ fontSize: '0.92rem', fontWeight: 700, color: '#ffffff', marginTop: '0.15rem' }}>
+                <p style={{ fontSize: '0.92rem', fontWeight: 700, color: 'var(--text-main)', marginTop: '0.15rem' }}>
                   {new Date(crop.harvestDate).toLocaleDateString(lang === 'hi' ? 'hi-IN' : 'en-US')}
                 </p>
               </div>
 
               <div>
-                <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-light)', fontWeight: 700, textTransform: 'uppercase' }}>
                   {lang === 'hi' ? 'गुणवत्ता श्रेणी' : 'Quality Grade'}
                 </span>
                 <div style={{ marginTop: '0.2rem' }}>
@@ -122,7 +122,7 @@ export default function KisanReceiptModal({ crop, block, isOpen, onClose, lang =
               </div>
 
               <div>
-                <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-light)', fontWeight: 700, textTransform: 'uppercase' }}>
                   {lang === 'hi' ? 'वर्तमान स्थिति' : 'Current Status'}
                 </span>
                 <div style={{ marginTop: '0.2rem' }}>
@@ -134,16 +134,16 @@ export default function KisanReceiptModal({ crop, block, isOpen, onClose, lang =
             </div>
 
             {/* Cryptographic Footprint Preview */}
-            <div style={{ background: 'rgba(11, 16, 26, 0.8)', border: '1px solid var(--border)', borderRadius: '10px', padding: '0.9rem', marginBottom: '1.25rem', fontSize: '0.78rem' }}>
+            <div style={{ background: 'var(--surface-alt)', border: '1px solid var(--border)', borderRadius: '10px', padding: '0.9rem', marginBottom: '1.25rem', fontSize: '0.78rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
-                <span style={{ color: '#64748b', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.7rem' }}>
+                <span style={{ color: 'var(--text-light)', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.7rem' }}>
                   Crop ID (MongoDB & Hash):
                 </span>
                 <span style={{ color: '#38bdf8', fontFamily: 'JetBrains Mono, monospace' }}>{crop._id}</span>
               </div>
               {block && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: '#64748b', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.7rem' }}>
+                  <span style={{ color: 'var(--text-light)', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.7rem' }}>
                     Blockchain Block:
                   </span>
                   <span style={{ color: '#10b981', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700 }}>

@@ -87,10 +87,10 @@ export default function SplitAxisConvergence({ lang = 'hi' }) {
           <Layers size={13} />
           <span>{lang === 'hi' ? 'प्लेटफॉर्म क्षमताएं' : 'ENTERPRISE PROTOCOL SUITE'}</span>
         </span>
-        <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.025em', marginTop: '0.4rem' }}>
+        <h2 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.025em', marginTop: '0.4rem' }}>
           {lang === 'hi' ? 'मिलीग्राम्स कैसे कृषि को बदल रहा है?' : 'How Miligrams Transforms Agricultural Integrity'}
         </h2>
-        <p style={{ color: '#94a3b8', fontSize: '0.96rem', maxWidth: '640px', margin: '0.4rem auto 0', lineHeight: 1.5 }}>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.96rem', maxWidth: '640px', margin: '0.4rem auto 0', lineHeight: 1.5 }}>
           {lang === 'hi'
             ? 'खेत से लेकर मंडी तक प्रत्येक कदम पर शून्य-छेड़छाड़ ब्लॉकचेन, उचित मूल्य और किसानों की पूर्ण सुरक्षा।'
             : 'End-to-end cryptographic transparency, fair farmer pricing, and zero middleman tampering.'}
@@ -110,7 +110,7 @@ export default function SplitAxisConvergence({ lang = 'hi' }) {
               onClick={() => setActiveCard(idx)}
               whileHover={{ y: -6, transition: { duration: 0.25 } }}
               style={{
-                borderColor: isSelected ? feat.color : 'rgba(255, 255, 255, 0.08)',
+                borderColor: isSelected ? feat.color : 'var(--border)',
                 boxShadow: isSelected ? `0 15px 35px ${feat.color}25, 0 0 20px ${feat.color}15` : undefined
               }}
             >
@@ -128,18 +128,18 @@ export default function SplitAxisConvergence({ lang = 'hi' }) {
                       <Icon size={19} />
                     </div>
                     <div>
-                      <h3 style={{ fontSize: '1.08rem', fontWeight: 800, color: '#ffffff' }}>{feat.title}</h3>
-                      <span style={{ fontSize: '0.74rem', color: '#94a3b8', fontWeight: 600 }}>{feat.subtitle}</span>
+                      <h3 style={{ fontSize: '1.08rem', fontWeight: 800, color: 'var(--text-main)' }}>{feat.title}</h3>
+                      <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', fontWeight: 600 }}>{feat.subtitle}</span>
                     </div>
                   </div>
 
-                  <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: 1.5, marginBottom: '1.25rem' }}>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.5, marginBottom: '1.25rem' }}>
                     {feat.desc}
                   </p>
                 </div>
 
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.85rem', fontSize: '0.72rem', color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.85rem', fontSize: '0.72rem', color: 'var(--text-light)', fontFamily: 'JetBrains Mono, monospace' }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                       <Cpu size={12} color={feat.color} />
                       <span>{feat.telemetry}</span>
