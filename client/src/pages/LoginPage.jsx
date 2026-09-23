@@ -3,12 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Sprout, Building2, ShoppingBag, ShieldCheck, 
   ArrowRight, CheckCircle2, AlertTriangle, 
-  Sparkles, LogIn, ChevronLeft, Shield, Award 
+  Sparkles, LogIn, ChevronLeft, Shield, Award,
+  Globe, Sun, Moon
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { soundFX } from '../utils/audioFX';
 
-export default function LoginPage({ lang = 'hi' }) {
+export default function LoginPage({ 
+  lang = 'hi', 
+  setLang = () => {}, 
+  theme = 'dark', 
+  toggleTheme = () => {} 
+}) {
   const navigate = useNavigate();
   const { login, isAuthenticated, currentUser, currentRole } = useAuth();
 
@@ -227,7 +233,52 @@ export default function LoginPage({ lang = 'hi' }) {
   };
 
   return (
-    <div style={{ maxWidth: '960px', margin: '1.5rem auto 4rem', padding: '0 1rem' }}>
+    <div style={{ maxWidth: '960px', margin: '1.25rem auto 4rem', padding: '0 1rem' }}>
+      {/* Sleek Top Navigation Bar */}
+      <header className="front-navbar" style={{ marginBottom: '2rem', borderRadius: '16px', padding: '0.75rem 1.25rem' }}>
+        <div 
+          className="front-navbar-brand" 
+          onClick={() => { soundFX.click(); navigate('/'); }}
+          title={lang === 'hi' ? 'मुख्य पृष्ठ पर जाएँ' : 'Back to Home'}
+          style={{ cursor: 'pointer' }}
+        >
+          <div className="front-brand-icon" style={{ width: '32px', height: '32px' }}>
+            <Sprout size={18} />
+          </div>
+          <div>
+            <span className="front-brand-title" style={{ fontSize: '1.1rem' }}>MiliGrams</span>
+            <span className="front-brand-sub" style={{ fontSize: '0.66rem' }}>
+              {lang === 'hi' ? '← मुख्य पृष्ठ' : '← Back to Home'}
+            </span>
+          </div>
+        </div>
+
+        <div className="front-navbar-actions">
+          {/* Language Switch */}
+          <button
+            onClick={() => { soundFX.click(); setLang(lang === 'hi' ? 'en' : 'hi'); }}
+            className="btn btn-secondary btn-sm"
+            title="Switch Language"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.78rem', padding: '0.35rem 0.75rem' }}
+          >
+            <Globe size={13} />
+            <span>{lang === 'hi' ? 'English' : 'हिन्दी'}</span>
+          </button>
+
+          {/* Theme Toggle Button */}
+          {toggleTheme && (
+            <button
+              onClick={() => { soundFX.click(); toggleTheme(); }}
+              className="btn btn-secondary btn-sm"
+              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+              style={{ padding: '0.35rem 0.65rem' }}
+            >
+              {theme === 'dark' ? <Sun size={14} color="#fbbf24" /> : <Moon size={14} color="#38bdf8" />}
+            </button>
+          )}
+        </div>
+      </header>
+
       {/* Brand Header */}
       <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.25)', color: '#34d399', padding: '0.35rem 0.9rem', borderRadius: '9999px', fontSize: '0.78rem', fontWeight: 800, marginBottom: '0.85rem' }}>

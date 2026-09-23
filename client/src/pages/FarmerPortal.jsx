@@ -298,7 +298,7 @@ export default function FarmerPortal({ lang = 'hi' }) {
             <Sparkles size={18} />
           </div>
           <div>
-            <strong style={{ color: '#ffffff', fontSize: '0.92rem' }}>
+            <strong style={{ color: 'var(--text-main)', fontSize: '0.92rem' }}>
               {t.assistedMode}
             </strong>
             <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: 0 }}>
@@ -312,31 +312,31 @@ export default function FarmerPortal({ lang = 'hi' }) {
       </div>
 
       {/* Luxury Farmer Header Banner */}
-      <div className="glass-panel" style={{ padding: '2rem 2.25rem', marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem', background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(14, 20, 34, 0.8) 100%)', borderColor: 'rgba(16, 185, 129, 0.3)' }}>
+      <div className="glass-panel" style={{ padding: '2rem 2.25rem', marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem', background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, var(--surface-alt) 100%)', borderColor: 'rgba(16, 185, 129, 0.3)' }}>
         <div>
           <span className="badge" style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#34d399', borderColor: 'rgba(16, 185, 129, 0.3)', marginBottom: '0.65rem' }}>
             <Sprout size={13} />
             <span>SOVEREIGN PROVENANCE</span>
           </span>
-          <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em', margin: '0.35rem 0' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em', margin: '0.35rem 0' }}>
             {t.farmerBannerTitle}
           </h2>
-          <p style={{ color: '#94a3b8', fontSize: '0.94rem', maxWidth: '600px' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.94rem', maxWidth: '600px' }}>
             {t.farmerBannerSubtitle}
           </p>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
           {/* Active Farmer Selector */}
-          <div style={{ background: 'rgba(11, 16, 26, 0.85)', border: '1px solid var(--border-light)', padding: '0.5rem 1rem', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <div style={{ background: 'var(--surface-alt)', border: '1px solid var(--border-light)', padding: '0.5rem 1rem', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <User size={18} color="#10b981" />
             <select
               value={selectedFarmerId}
               onChange={(e) => setSelectedFarmerId(e.target.value)}
-              style={{ border: 'none', background: 'transparent', fontWeight: 700, fontSize: '0.88rem', color: '#ffffff', outline: 'none', cursor: 'pointer' }}
+              style={{ border: 'none', background: 'transparent', fontWeight: 700, fontSize: '0.88rem', color: 'var(--text-main)', outline: 'none', cursor: 'pointer' }}
             >
               {farmers.map(f => (
-                <option key={f.uniqueId} value={f.uniqueId} style={{ background: '#0e1421', color: '#ffffff' }}>
+                <option key={f.uniqueId} value={f.uniqueId} style={{ background: 'var(--surface-solid)', color: 'var(--text-main)' }}>
                   {f.name} ({f.location || f.uniqueId})
                 </option>
               ))}
@@ -481,7 +481,7 @@ export default function FarmerPortal({ lang = 'hi' }) {
 
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.35rem' }}>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
                 {isListening ? (voiceLang === 'hi-IN' ? 'सुन रहे हैं... बोलिए' : 'Listening... speak now') : t.voiceInputTitle}
               </h3>
               <div className="soundwave-visualizer">
@@ -495,7 +495,7 @@ export default function FarmerPortal({ lang = 'hi' }) {
               </div>
             </div>
 
-            <p style={{ color: '#94a3b8', fontSize: '0.86rem', margin: 0 }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.86rem', margin: 0 }}>
               {voiceLang === 'hi-IN'
                 ? 'माइक दबाकर बोलें: जैसे "500 किलो शरबती गेहूं" — AI स्वतः पहचान कर लेगा।'
                 : 'Tap mic and speak naturally: e.g. "500 kg Wheat" — the AI auto-extracts data.'}
@@ -536,7 +536,7 @@ export default function FarmerPortal({ lang = 'hi' }) {
             <strong style={{ color: '#fbbf24', fontSize: '1rem', display: 'block' }}>
               {t.agingAlertTitle}
             </strong>
-            <p style={{ fontSize: '0.86rem', color: '#e2e8f0', marginTop: '0.25rem' }}>
+            <p style={{ fontSize: '0.86rem', color: 'var(--text-main)', marginTop: '0.25rem' }}>
               {t.agingAlertDesc} ({agedCrops.length} {lang === 'hi' ? 'फसलें' : 'crop batches'})
             </p>
           </div>
@@ -563,8 +563,8 @@ export default function FarmerPortal({ lang = 'hi' }) {
             <Sprout size={24} />
           </div>
           <div>
-            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#ffffff', fontFamily: 'JetBrains Mono, monospace' }}>{totalCropsCount}</div>
-            <div style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 700 }}>{t.totalCrops}</div>
+            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--text-main)', fontFamily: 'JetBrains Mono, monospace' }}>{totalCropsCount}</div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 700 }}>{t.totalCrops}</div>
           </div>
         </div>
 
@@ -573,8 +573,8 @@ export default function FarmerPortal({ lang = 'hi' }) {
             <Sparkles size={24} />
           </div>
           <div>
-            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#ffffff', fontFamily: 'JetBrains Mono, monospace' }}>{farmStageCount}</div>
-            <div style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 700 }}>{t.atFarm}</div>
+            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--text-main)', fontFamily: 'JetBrains Mono, monospace' }}>{farmStageCount}</div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 700 }}>{t.atFarm}</div>
           </div>
         </div>
 
@@ -583,8 +583,8 @@ export default function FarmerPortal({ lang = 'hi' }) {
             <Building2 size={24} />
           </div>
           <div>
-            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#ffffff', fontFamily: 'JetBrains Mono, monospace' }}>{warehouseStageCount}</div>
-            <div style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 700 }}>{t.inWarehouse}</div>
+            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--text-main)', fontFamily: 'JetBrains Mono, monospace' }}>{warehouseStageCount}</div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 700 }}>{t.inWarehouse}</div>
           </div>
         </div>
 
@@ -593,15 +593,15 @@ export default function FarmerPortal({ lang = 'hi' }) {
             <ShoppingBag size={24} />
           </div>
           <div>
-            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#ffffff', fontFamily: 'JetBrains Mono, monospace' }}>{soldStageCount}</div>
-            <div style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 700 }}>{t.sold}</div>
+            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--text-main)', fontFamily: 'JetBrains Mono, monospace' }}>{soldStageCount}</div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 700 }}>{t.sold}</div>
           </div>
         </div>
       </div>
 
       {/* Crops Inventory Section */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+        <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
           <span>{t.myCrops}</span>
           <span style={{ fontSize: '0.88rem', fontWeight: 600, color: '#94a3b8' }}>({farmerCrops.length})</span>
         </h3>
@@ -622,8 +622,8 @@ export default function FarmerPortal({ lang = 'hi' }) {
           <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
             <Sprout size={32} />
           </div>
-          <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#ffffff' }}>{t.noCropsYet}</h3>
-          <p style={{ color: '#94a3b8', marginTop: '0.35rem' }}>{t.firstCropPrompt}</p>
+          <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)' }}>{t.noCropsYet}</h3>
+          <p style={{ color: 'var(--text-muted)', marginTop: '0.35rem' }}>{t.firstCropPrompt}</p>
           <button
             onClick={() => setIsUploadOpen(true)}
             className="btn btn-primary btn-lg"
@@ -656,12 +656,12 @@ export default function FarmerPortal({ lang = 'hi' }) {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-                  <div style={{ width: '52px', height: '52px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.05)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                  <div style={{ width: '52px', height: '52px', borderRadius: '14px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
                     <Icon size={26} />
                   </div>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap', marginBottom: '0.35rem' }}>
-                      <span style={{ fontSize: '1.12rem', fontWeight: 800, color: '#ffffff' }}>{crop.cropType}</span>
+                      <span style={{ fontSize: '1.12rem', fontWeight: 800, color: 'var(--text-main)' }}>{crop.cropType}</span>
                       {isAged && (
                         <span className="badge badge-aging">
                           🔄 {lang === 'hi' ? '15-दिन पुनः सत्यापित (-20%)' : '15-Day Re-verified (20% OFF)'}
@@ -674,8 +674,8 @@ export default function FarmerPortal({ lang = 'hi' }) {
                       )}
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', color: '#94a3b8', fontSize: '0.84rem', flexWrap: 'wrap' }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#ffffff', fontWeight: 700 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', color: 'var(--text-muted)', fontSize: '0.84rem', flexWrap: 'wrap' }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: 'var(--text-main)', fontWeight: 700 }}>
                         <Scale size={14} color="#10b981" />
                         <span>{crop.quantity.toLocaleString()} kg</span>
                         <span style={{ color: '#94a3b8', fontWeight: 500 }}>({weightQuintal} Q)</span>
@@ -822,7 +822,7 @@ export default function FarmerPortal({ lang = 'hi' }) {
                 {/* Crop Variety Selection */}
                 <div style={{ marginBottom: '1.75rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                    <label className="form-label" style={{ fontSize: '0.88rem', color: '#ffffff', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <label className="form-label" style={{ fontSize: '0.88rem', color: 'var(--text-main)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                       <Sprout size={16} color="#10b981" />
                       <span>{t.selectCrop} *</span>
                     </label>
@@ -853,10 +853,10 @@ export default function FarmerPortal({ lang = 'hi' }) {
                           <div className="crop-tile-icon">
                             <Icon size={24} />
                           </div>
-                          <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>
+                          <span style={{ fontSize: '0.92rem', fontWeight: 800, color: 'var(--text-main)' }}>
                             {lang === 'hi' ? tile.nameHi : tile.nameEn}
                           </span>
-                          <span style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 600 }}>
+                          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>
                             {lang === 'hi' ? tile.nameEn : tile.nameHi}
                           </span>
                         </div>
@@ -868,7 +868,7 @@ export default function FarmerPortal({ lang = 'hi' }) {
                 {/* Weight / Quantity */}
                 <div style={{ marginBottom: '1.75rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                    <label className="form-label" style={{ fontSize: '0.88rem', color: '#ffffff', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <label className="form-label" style={{ fontSize: '0.88rem', color: 'var(--text-main)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                       <Scale size={16} color="#10b981" />
                       <span>{t.weightLabel} *</span>
                     </label>
@@ -892,8 +892,8 @@ export default function FarmerPortal({ lang = 'hi' }) {
                       onChange={(e) => setQuantity(Number(e.target.value))}
                       required
                     />
-                    <span style={{ fontSize: '1.1rem', fontWeight: 700, color: '#94a3b8' }}>
-                      kg = <strong style={{ color: '#ffffff' }}>{(quantity / 100).toFixed(1)} Quintal</strong>
+                    <span style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-muted)' }}>
+                      kg = <strong style={{ color: 'var(--text-main)' }}>{(quantity / 100).toFixed(1)} Quintal</strong>
                     </span>
                   </div>
 

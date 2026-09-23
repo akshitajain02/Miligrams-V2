@@ -41,7 +41,7 @@ function AppContent({ lang, setLang, theme, toggleTheme }) {
           <Route path="/" element={<FrontPage lang={lang} setLang={setLang} theme={theme} toggleTheme={toggleTheme} />} />
           
           {/* Step 2: Role-Based Authentication & Gateway */}
-          <Route path="/login" element={<LoginPage lang={lang} />} />
+          <Route path="/login" element={<LoginPage lang={lang} setLang={setLang} theme={theme} toggleTheme={toggleTheme} />} />
           
           {/* System Overview & Interactive 3D Ecosystem */}
           <Route path="/overview" element={<LandingPage lang={lang} />} />

@@ -4,7 +4,7 @@ import {
   Sprout, Building2, ShoppingBag, ShieldCheck, ArrowRight, 
   Sparkles, CheckCircle2, Star, Mic, Shield, Award, 
   Clock, Truck, Users, Layers, ChevronRight, Globe, Sun, Moon,
-  HeartHandshake, Compass, Leaf
+  HeartHandshake, Compass
 } from 'lucide-react';
 import PhotoCards3D from '../components/PhotoCards3D';
 import NatureBackground from '../components/NatureBackground';
@@ -252,7 +252,7 @@ export default function FrontPage({ lang = 'hi', setLang, theme = 'dark', toggle
         <section className="front-hero-section">
           <div className="front-hero-header">
             <div className="nature-badge-pill">
-              <Leaf size={14} className="leaf-pulse-icon" />
+              <Sparkles size={14} color="#34d399" />
               <span>
                 {lang === 'hi' 
                   ? 'भारत की पहली प्रकृति-आधारित कृषि ब्लॉकचेन • BHARAT AGRI-LEDGER'
